@@ -1,0 +1,56 @@
+#sizer {
+  margin-bottom: 2rem;
+}
+
+#plot-view {
+  box-sizing: border-box;
+  height: 300px;
+  margin-right: 300px;
+}
+
+#plant-list {
+  background: green;
+  float: right;
+  height: 300px;
+  width: 300px;
+}
+
+#plot-grid {
+  border: 1px solid black;
+  height: 600px;
+  margin: auto;
+  width: 600px;
+}
+
+.plot-box {
+  background-color: #FFF;
+  border: 1px #999 dotted;
+  box-sizing: border-box;
+  float: left;
+  height: 30px;
+  width: 30px;
+}
+
+.type-1 {
+  background-color: #FFFF00;
+}
+
+.type-2 {
+  background-color: #FF6600;
+}
+
+.type-3 {
+  background-color: #FF0000;
+}
+
+.type-4 {
+  background-color: #000000;
+}
+
+.type-5 {
+  background-color: #00FF00;
+}
+
+.type-6 {
+  background-color: #0000FF;
+}
