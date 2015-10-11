@@ -16,6 +16,7 @@ module.exports = React.createClass({
 			dragStart: null,
 			dragCurrent: null,
 			plantMatrix: this.generatePlantMatrix(rows, columns),
+			affinityScore: 0,
 		};
 	},
 
@@ -139,14 +140,14 @@ module.exports = React.createClass({
 			width: (this.state.columns*boxLength)+'px',
 		};
 
-		let affinityScore = 0;
+		this.state.affinityScore = 0;
 
 		let boxElements = this.state.plantMatrix
 		.map((row, y) => {
 			return row.map((plantId, x) => {
 				let affinities = this.getAllNeighborAffinities(this.state, plantId, x, y);
 				if(affinities.length) {
-					affinityScore += affinities.reduce(function(previousValue, currentValue) {
+					this.state.affinityScore += affinities.reduce(function(previousValue, currentValue) {
 						return previousValue + currentValue.affinity;
 					}, 0);
 				}
@@ -186,7 +187,7 @@ module.exports = React.createClass({
 						Columns: <input type="number" ref="columns" defaultValue="20" />
 						<button>Resize</button>
 					</form>
-					Companion Score: {affinityScore}
+					Companion Score: {this.state.affinityScore}
 				</section>
 				<section>
 					<div id="plant-list">
