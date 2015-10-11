@@ -184,7 +184,7 @@ module.exports = React.createClass({
 				<section className="editor">
 					<div className="toolbar">
 						<div className="left">
-							<button className="remove"><i /> Remove Plants</button>
+							<button className="remove" onClick={this.setRemove}><i /> Remove Plants</button>
 						</div>
 						<span>Companion Score: {this.state.affinityScore}</span>
 						<div className="right">
@@ -244,7 +244,7 @@ module.exports = React.createClass({
 
 	setDragData: function(x, y, property) {
 		return () => {
-			if(!this.state.dragStart) return;
+			if(property !== 'dragStart' && !this.state.dragStart) return;
 			let stateData = {};
 			stateData[property] = {
 				x: x,
@@ -277,4 +277,10 @@ module.exports = React.createClass({
 			currentPlant: plantId
 		});
 	},
+
+	setRemove: function(e) {
+		this.setState({
+			currentPlant: 0
+		});
+	}
 });
