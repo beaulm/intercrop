@@ -177,13 +177,16 @@ module.exports = React.createClass({
 
 		return (
 			<main>
-				<select id="vegetable-list" ref="vegetable">
-					{veggieOptions}
-				</select>
 				<PlantPicker plants={this.plants} onClick={this.setCurrentPlant} />
 				<section className="editor">
-					<div>
-						Companion Score: {this.state.affinityScore}
+					<div className="toolbar">
+						<div className="left">
+							<button className="remove"><i /> Remove Plants</button>
+						</div>
+						<span>Companion Score: {this.state.affinityScore}</span>
+						<div className="right">
+							<button className="resize"><i /> Resize 20 x 20 Plot</button>
+						</div>
 					</div>
 					<form onSubmit={this.sizeChanged}>
 						Rows: <input type="number" ref="rows" defaultValue="20" />
