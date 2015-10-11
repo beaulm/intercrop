@@ -139,10 +139,17 @@ module.exports = React.createClass({
       width: (this.state.columns*boxLength)+'px',
     };
 
+    let affinityScore = 0;
+
     let boxElements = this.state.plantMatrix
     .map((row, y) => {
       return row.map((plantId, x) => {
         let affinities = this.getAllNeighborAffinities(this.state, plantId, x, y);
+        if(affinities.length) {
+          affinityScore += affinities.reduce(function(previousValue, currentValue) {
+            return previousValue + currentValue.affinity;
+          }, 0);
+        }
         let style = affinities.reduce((style, affinity) => {
           let borderString = 'border'+affinity.descriptor.charAt(0).toUpperCase();
           borderString += affinity.descriptor.substr(1);
@@ -162,7 +169,8 @@ module.exports = React.createClass({
             style={style}
             onMouseDown={this.setDragData(x, y, 'dragStart')}
             onMouseEnter={this.setDragData(x, y, 'dragCurrent')}
-            onMouseUp={this.solidifyDrag(x, y)} />
+            onMouseUp={this.solidifyDrag(x, y)}
+          />
         );
       });
     })
@@ -178,6 +186,7 @@ module.exports = React.createClass({
             Columns: <input type="number" ref="columns" defaultValue="20" />
             <button>Resize</button>
           </form>
+          Companion Score: {affinityScore}
         </section>
         <section>
           <div id="plant-list">
@@ -253,7 +262,6 @@ module.exports = React.createClass({
 
   solidifyDrag: function(x, y) {
     return () => {
-      console.log('solidifyDrag', x, y);
       if(!this.state.dragStart || !this.state.dragCurrent) {
         return;
       }
