@@ -7,12 +7,7 @@ module.exports = React.createClass({
 		};
 	},
 
-	componentWillMount: function() {
-		console.log(this.props);
-	},
-
 	render: function() {
-		console.log('resize render', this.props);
 		var content = null;
 		if(this.state.editing) {
 			content = (

@@ -130,7 +130,6 @@ module.exports = React.createClass({
 	},
 
 	render: function() {
-		console.log('render app', this.state.width, this.state.height);
 		let veggieOptions = this.plants.map(function(veggie) {
 			return <option value={veggie.id} key={veggie.id}>{veggie.get('name')}</option>
 		});
@@ -170,6 +169,7 @@ module.exports = React.createClass({
 						onMouseDown={this.setDragData(x, y, 'dragStart')}
 						onMouseEnter={this.setDragData(x, y, 'dragCurrent')}
 						onMouseUp={this.solidifyDrag(x, y)}
+						onClick={this.updatePlant(x, y)}
 					/>
 				);
 			});
@@ -200,7 +200,6 @@ module.exports = React.createClass({
 	},
 
 	sizeChanged: function(width, height, units) {
-		console.log(width, height, units);
 		this.setState({
 			width: width,
 			height: height,
@@ -231,15 +230,10 @@ module.exports = React.createClass({
 	},
 
 	boxChange: function(x, y) {
-		this.state.plantMatrix[y][x] = this.getVegetableId();
+		this.state.plantMatrix[y][x] = this.state.currentPlant;
 		this.setState({
 			plantMatrix: this.state.plantMatrix
 		});
-	},
-
-	getVegetableId: function() {
-		return this.state.currentPlant;
-		//return parseInt(this.refs.vegetable.value);
 	},
 
 	setDragData: function(x, y, property) {
@@ -261,7 +255,7 @@ module.exports = React.createClass({
 			}
 			for(let yy=Math.min(this.state.dragStart.y, y); yy<=Math.max(this.state.dragStart.y, y); yy++) {
 				for(let xx=Math.min(this.state.dragStart.x, x); xx<=Math.max(this.state.dragStart.x, x); xx++) {
-					this.state.plantMatrix[yy][xx] = this.getVegetableId();
+					this.state.plantMatrix[yy][xx] = this.state.currentPlant;
 				}
 			}
 			this.setState({
@@ -270,6 +264,17 @@ module.exports = React.createClass({
 				plantMatrix: this.state.plantMatrix
 			});
 		};
+	},
+
+	updatePlant: function(x, y) {
+		return () => {
+			this.state.plantMatrix[y][x] = this.state.currentPlant;
+			this.setState({
+				dragStart: null,
+				dragCurrent: null,
+				plantMatrix: this.state.plantMatrix
+			});
+		}
 	},
 
 	setCurrentPlant: function(plantId) {
