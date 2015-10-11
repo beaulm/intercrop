@@ -1,9 +1,11 @@
 let React = require('react');
+let PlantButton = require('./PlantButton');
 
 module.exports = React.createClass({
 	getInitialState: function() {
 		return {
 			searchTerm: '',
+			currentPlant: 1,
 		};
 	},
 
@@ -16,39 +18,37 @@ module.exports = React.createClass({
 	render: function() {
 		// let partialSearch = new RegExp(this.state.searchTerm, 'i');
 		let plantButtons = this.props.plants.filter((plant) => {
-			return plant.attributes.name.indexOf(this.state.searchTerm) > -1;
-			//return partialSearch.test(plant.attributes.name);
+			return plant.get('name').indexOf(this.state.searchTerm) > -1;
+			//return partialSearch.test(plant.get('name'));
 		}).map((plant) => {
 			return (
-				<button key={'plant-button-'+plant.attributes.id} onClick={this.buttonClicked(plant.attributes.id)}>
-					<img src={plant.attributes.url} />
-					<span>{plant.attributes.name}</span>
-				</button>
+				<PlantButton key={'plant-button-'+plant.id} plant={plant} active={(this.state.currentPlant === plant.id)} onClick={this.buttonClicked} />
 			);
 		});
 
 		return (
-				<section className="plant-picker">
-					<form className="search">
-						<label>
-							<h6>Find Plant</h6>
-							<div className="form-row">
-								<input ref="searchBox" type="text" placeholder="carrots" onKeyUp={this.refinePlantList} />
-								<button className="search"></button>
-							</div>
-						</label>
-					</form>
-					<div className="filter-results">
-						{plantButtons}
-					</div>
-				</section>
+			<section className="plant-picker">
+				<form className="search">
+					<label>
+						<h6>Find Plant</h6>
+						<div className="form-row">
+							<input ref="searchBox" type="text" placeholder="carrots" onKeyUp={this.refinePlantList} />
+							<button className="search"></button>
+						</div>
+					</label>
+				</form>
+				<div className="filter-results">
+					{plantButtons}
+				</div>
+			</section>
 		);
 	},
 
 	buttonClicked: function(plantId) {
-		return () => {
-			this.props.onClick(plantId);
-		};
+		this.setState({
+			currentPlant: plantId
+		});
+		this.props.onClick(plantId);
 	},
 
 	refinePlantList: function() {
