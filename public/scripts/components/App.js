@@ -1,6 +1,7 @@
 let React = require('react');
 let PlantCollection = require('../collections/PlantCollection');
 let _ = require('backbone/node_modules/underscore');
+let PlantPicker = require('./PlantPicker');
 
 const boxLength = 30;
 
@@ -16,6 +17,7 @@ module.exports = React.createClass({
 			dragCurrent: null,
 			plantMatrix: this.generatePlantMatrix(rows, columns),
 			affinityScore: 0,
+			currentPlant: 1,
 		};
 	},
 
@@ -172,73 +174,13 @@ module.exports = React.createClass({
 		.reduce(function(previousArray, currentRow) {
 			return previousArray.concat(currentRow);
 		}, []);
-		
+
 		return (
 			<main>
-				<section className="plant-picker">
-					<select id="vegetable-list" ref="vegetable">
-						{veggieOptions}
-					</select>
-					<form className="search">
-						<label>
-							<h6>Find Plant</h6>
-							<div className="form-row">
-								<input type="text" placeholder="carrots" />
-								<button className="search"></button>
-							</div>
-						</label>
-					</form>
-					<div className="filter-results">
-						<button>
-							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/16090-42.png" />
-							<span>Cucmbers</span>
-						</button>
-						<button>
-							<div className="no-image">Ko</div>
-							<span>Kohlrabi</span>
-						</button>
-						<button>
-							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/50402-42.png" />
-							<span>Radishes</span>
-						</button>
-						<button>
-							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/177692-42.png" />
-							<span>Peas</span>
-						</button>
-						<button>
-							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/105370-42.png" />
-							<span>Potatos</span>
-						</button>
-						<button>
-							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/62621-42.png" />
-							<span>Lettuce</span>
-						</button>
-						<button>
-							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/113844-42.png" />
-							<span>Grapes</span>
-						</button>
-						<button>
-							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/180321-42.png" />
-							<span>Garlic</span>
-						</button>
-						<button>
-							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/105370-42.png" />
-							<span>Potatos</span>
-						</button>
-						<button>
-							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/62621-42.png" />
-							<span>Lettuce</span>
-						</button>
-						<button>
-							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/113844-42.png" />
-							<span>Grapes</span>
-						</button>
-						<button>
-							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/180321-42.png" />
-							<span>Garlic</span>
-						</button>
-					</div>
-				</section>
+				<select id="vegetable-list" ref="vegetable">
+					{veggieOptions}
+				</select>
+				<PlantPicker plants={this.plants} onClick={this.setCurrentPlant} />
 				<section className="editor">
 					<div>
 						Companion Score: {this.state.affinityScore}
@@ -275,10 +217,10 @@ module.exports = React.createClass({
 		}
 
 		let newMatrix = [];
-		for(let y=0; y<height; y++) {
+		for(let y = 0; y < height; y++) {
 			let row = [];
-			for(let x=0; x<width; x++) {
-				if(y<currentPlantMatrix.length && x<currentPlantMatrix[y].length) {
+			for(let x = 0; x < width; x++) {
+				if(y < currentPlantMatrix.length && x < currentPlantMatrix[y].length) {
 					row.push(currentPlantMatrix[y][x]);
 				}
 				else {
@@ -298,7 +240,8 @@ module.exports = React.createClass({
 	},
 
 	getVegetableId: function() {
-		return parseInt(this.refs.vegetable.value);
+		return this.state.currentPlant;
+		//return parseInt(this.refs.vegetable.value);
 	},
 
 	setDragData: function(x, y, property) {
@@ -328,5 +271,9 @@ module.exports = React.createClass({
 				plantMatrix: this.state.plantMatrix
 			});
 		};
+	},
+
+	setCurrentPlant: function(plantId) {
+		this.state.currentPlant = plantId;
 	},
 });

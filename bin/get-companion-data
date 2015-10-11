@@ -126,7 +126,7 @@ request(page, function(error, response, html) {
 			}
 			else {
 				console.log(err, data);
-				url = 'http://thecatapi.com/api/images/get?format=src&type=gif&size=small';
+				url = 'http://thecatapi.com/api/images/get?format=src&type=gif&size=small&blah='+plant.id;
 			}
 
 			plant.url = url;
