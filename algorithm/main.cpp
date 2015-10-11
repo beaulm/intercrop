@@ -1,10 +1,6 @@
 #include <iostream>
 #include <vector>
 
-#include "rapidjson/include/rapidjson/document.h"
-
-using namespace rapidjson;
-
 class Plant;
 class Affinity;
 
@@ -42,8 +38,6 @@ int main(int argc, char* argv[])
 	std::cout << argv[0] << "\n";
 	std::cout << argv[1] << "\n";
 
-	Document d;
-	d.parse(argv[1]);
 	// rapidjson::Value& s = d["stars"];
 	// std::cout << s.GetInt() << "\n";
 

@@ -1,0 +1,50 @@
+73*290
+
+Rosemary: 17*11
+Thyme: 17*11
+Terragon: 2*17*11
+Oregano: 17*11
+Marjoram: 17*11
+Sage: 1.5*17*11
+Carrots: 66*41
+Beets: 66*41
+Cucumbers: 71*60
+Lemongrass: 63*24
+Leeks: 71*36
+Shallots: 20*40
+Red Onion: 20*40
+Yellow Onion: 20*40
+
+Size: 12x50
+
+Rosemary: 6
+Thyme: 6
+Tarragon: 12
+Rosemary: 6
+Oregano: 6
+Marjoram: 6
+Sage: 9
+Carrots: 90
+Beets: 90
+Cucumbers: 140
+Lemongrass: 50
+Leeks: 85
+Shallots: 26
+Red Onions: 26
+Yellow Onions: 26
+
+
+700
+
+70x290
+
+w*h = 700
+
+w/h = 70/290
+
+h = 290/70w
+
+w^2(290/70) = 700
+w = sqrt(700*70/290) = 12
+h = 700/13 = 50
+

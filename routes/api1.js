@@ -7,6 +7,34 @@ var Plant = require('../models/Plant');
 var NounProject = require('the-noun-project');
 var config = require('../config');
 var nounProject = new NounProject(config.nounProject);
+var request = require('request');
+
+router.post('/suggest', function(req, res, next) {
+	// req.body.
+	// res.send(req.body);
+	// console.log(req.body);
+});
+
+router.get('/test', function(req, res, next) {
+	request.post(
+		{
+			url:'http://localhost:3000/api/v1/suggest',
+			json: {
+				plants: [
+					{id: 1, quantity: 10},
+					{id: 2, quantity: 20},
+					{id: 3, quantity: 4},
+					{id: 4, quantity: 13}
+				],
+				rows: 20,
+				columns: 20
+			}
+		},
+		function(err, httpResponse, body){
+			res.send(body);
+		}
+	);
+});
 
 router.post('/plant', function(req, res, next) {
 	if(!req.body.name) {
