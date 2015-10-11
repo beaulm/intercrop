@@ -2,20 +2,22 @@ let React = require('react');
 let PlantCollection = require('../collections/PlantCollection');
 let _ = require('backbone/node_modules/underscore');
 let PlantPicker = require('./PlantPicker');
+let ResizeButton = require('./ResizeButton');
 
 const boxLength = 30;
 
 module.exports = React.createClass({
 	getInitialState: function() {
-		let rows = 20;
-		let columns = 20;
+		let width = 20;
+		let height = 20;
 
 		return {
-			rows: rows,
-			columns: columns,
+			width: width,
+			height: height,
+			units: 'imperial',
 			dragStart: null,
 			dragCurrent: null,
-			plantMatrix: this.generatePlantMatrix(rows, columns),
+			plantMatrix: this.generatePlantMatrix(width, height),
 			affinityScore: 0,
 			currentPlant: 1,
 		};
@@ -36,10 +38,10 @@ module.exports = React.createClass({
 		if(!plantModel) {
 			return null;
 		}
-		if(x < 0 || y < 0 || x >= state.columns || y >= state.rows) {
+		if(x < 0 || y < 0 || x >= state.width || y >= state.height) {
 			return null;
 		}
-		if(neighborX < 0 || neighborY < 0 || neighborX >= state.columns || neighborY >= state.rows) {
+		if(neighborX < 0 || neighborY < 0 || neighborX >= state.width || neighborY >= state.height) {
 			return null;
 		}
 
@@ -128,13 +130,14 @@ module.exports = React.createClass({
 	},
 
 	render: function() {
+		console.log('render app', this.state.width, this.state.height);
 		let veggieOptions = this.plants.map(function(veggie) {
 			return <option value={veggie.id} key={veggie.id}>{veggie.get('name')}</option>
 		});
 
 		let plotGridStyle = {
-			height: (this.state.rows*boxLength)+'px',
-			width: (this.state.columns*boxLength)+'px',
+			height: (this.state.height*boxLength)+'px',
+			width: (this.state.width*boxLength)+'px',
 		};
 
 		this.state.affinityScore = 0;
@@ -177,19 +180,17 @@ module.exports = React.createClass({
 
 		return (
 			<main>
-				<select id="vegetable-list" ref="vegetable">
-					{veggieOptions}
-				</select>
 				<PlantPicker plants={this.plants} onClick={this.setCurrentPlant} />
 				<section className="editor">
-					<div>
-						Companion Score: {this.state.affinityScore}
+					<div className="toolbar">
+						<div className="left">
+							<button className="remove"><i /> Remove Plants</button>
+						</div>
+						<span>Companion Score: {this.state.affinityScore}</span>
+						<div className="right">
+							<ResizeButton width={this.state.width} height={this.state.height} units={this.state.units} onChange={this.sizeChanged} />
+						</div>
 					</div>
-					<form onSubmit={this.sizeChanged}>
-						Rows: <input type="number" ref="rows" defaultValue="20" />
-						Columns: <input type="number" ref="columns" defaultValue="20" />
-						<button>Resize</button>
-					</form>
 					<div id="plot-grid" style={plotGridStyle}>
 						{boxElements}
 					</div>
@@ -198,16 +199,13 @@ module.exports = React.createClass({
 		);
 	},
 
-	sizeChanged: function(e) {
-		e.preventDefault();
-
-		let rows = parseFloat(this.refs.rows.value);
-		let columns = parseFloat(this.refs.columns.value);
-
+	sizeChanged: function(width, height, units) {
+		console.log(width, height, units);
 		this.setState({
-			rows: rows,
-			columns: columns,
-			plantMatrix: this.generatePlantMatrix(rows, columns, this.state.plantMatrix),
+			width: width,
+			height: height,
+			units: units,
+			plantMatrix: this.generatePlantMatrix(width, height, this.state.plantMatrix),
 		});
 	},
 
@@ -246,6 +244,7 @@ module.exports = React.createClass({
 
 	setDragData: function(x, y, property) {
 		return () => {
+			if(!this.state.dragStart) return;
 			let stateData = {};
 			stateData[property] = {
 				x: x,
