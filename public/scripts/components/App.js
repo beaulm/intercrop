@@ -1,5 +1,4 @@
 let React = require('react');
-let Box = require('./Box');
 let PlantCollection = require('../collections/PlantCollection');
 let _ = require('backbone/node_modules/underscore');
 
@@ -101,10 +100,6 @@ module.exports = React.createClass({
 		let styles = {};
 
 		if(state.dragStart !== null && state.dragCurrent !== null) {
-			let startX = state.dragStart.x;
-			let currentX = state.dragCurrent.x;
-			let startY = state.dragStart.y;
-			let currentY = state.dragCurrent.y;
 			let minX = Math.min(state.dragStart.x, state.dragCurrent.x);
 			let maxX = Math.max(state.dragStart.x, state.dragCurrent.x);
 			let minY = Math.min(state.dragStart.y, state.dragCurrent.y);
