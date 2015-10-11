@@ -1,10 +1,10 @@
 'use strict';
 
-var gulp    	= require( 'gulp' ),
-	gutil   		= require( 'gulp-util' ),
-	fork    		= require( 'child_process' ).fork,
-	// tinyLr  	= require( 'tiny-lr' ),
-	async   		= require( 'async' ),
+var gulp			= require( 'gulp' ),
+	gutil	 		  = require( 'gulp-util' ),
+	fork				= require( 'child_process' ).fork,
+	// tinyLr		= require( 'tiny-lr' ),
+	async	 		  = require( 'async' ),
 	watchify		= require( 'watchify' ),
 	browserify 	= require( 'browserify' ),
 	babelify 		= require( 'babelify' ),
@@ -233,10 +233,10 @@ gulp.task( 'default', [ 'js-bundle', 'serve-sass', 'server', 'watch' ] );
 // 	}
 
 // 	return gulp.src('images/**/*')
-//     .pipe(imagemin({
-//         progressive: true
-//     }))
-//     .pipe(gulp.dest(path.join(argv.o, 'images')));
+//		 .pipe(imagemin({
+//				 progressive: true
+//		 }))
+//		 .pipe(gulp.dest(path.join(argv.o, 'images')));
 // });
 
 // function validateCli() {
