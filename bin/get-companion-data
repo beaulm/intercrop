@@ -1,0 +1,162 @@
+#!/usr/bin/env node
+
+global.knex = require('knex')(require('../knexfile')[process.env.NODE_ENV]);
+global.bookshelf = require('bookshelf')(knex);
+bookshelf.plugin('registry');
+
+var NounProject = require('the-noun-project');
+var config = require('../config');
+var nounProject = new NounProject(config.nounProject);
+
+var Plant = require('../models/Plant');
+
+var request = require('request');
+var cheerio = require('cheerio');
+var _ = require('lodash');
+
+var page = 'http://www.motherearthnews.com/organic-gardening/companion-planting-guide-zmaz81mjzraw.aspx';
+
+var plants = [];
+var nextPlantId = 1;
+
+function fixName(name) {
+	name = name.toLowerCase();
+	switch(name) {
+		case 'beans, bush':
+			return ['bush beans'];
+		case 'beans, pole':
+			return ['pole beans'];
+		case 'broccoli and brussels sprouts':
+			return ['broccoli', 'brussels sprouts'];
+		case 'cabbage and cauliflower':
+			return ['cabbage', 'cauliflower'];
+		case 'turnips and rutabagas':
+			return ['turnips', 'rutabagas'];
+		case 'cabbage family':
+			return ['cabbage'];
+		case 'field mustard':
+			return ['mustard'];
+		case 'late potatoes':
+			return ['potatoes'];
+		case 'early potatoes':
+			return ['potatoes'];
+		case 'garlic leeks':
+			return ['garlic'];
+		case 'cabbage/cauliflower companions (except tomatoes)':
+			return ['cabbage', 'cauliflower'];
+		case 'carrotsparsnips':
+			return ['carrots', 'parsnips'];
+		default:
+			return [name.replace('.', '')];
+	}
+}
+
+request(page, function(error, response, html) {
+	if(error) {
+		return false;
+	}
+
+	var $ = cheerio.load(html);
+
+	$('#ArticleContent1 > h2, #ArticleContent2 > h2, #ArticleContent3 > h2').each(function(i, elem) {
+		var plantNames = fixName($(this).text());
+
+		plantNames.map(function(plantName) {
+			plants.push({
+				id: nextPlantId++,
+				name: plantName,
+				affinities: {}
+			});
+		});
+	});
+
+	$('#ArticleContent1 > h2, #ArticleContent2 > h2, #ArticleContent3 > h2').each(function(i, elem) {
+		var $plantElement = $(this);
+		var currentPlants = fixName($plantElement.text());
+		currentPlants.map(function(plantName) {
+			var plantCompanionInfo = $plantElement.next('p').html();
+			var positionOfFirstBreak = plantCompanionInfo.indexOf('<br>');
+			var currentPlant = _.findWhere(plants, { 'name': plantName });
+
+			//Get a list of things this plant should be near
+			var plantNear = plantCompanionInfo.substring(12, positionOfFirstBreak).replace('#xA0;', '').trim().split(', ');
+			//Go over the list of plants it should be near
+			plantNear.map(function(companion) {
+				//Go through all the plants in our list
+				var companions = fixName(companion);
+				companions.map(function(companionName) {
+					plants.map(function(plant) {
+						//If the current plant in the list is the one is should be near
+						if(plant.name === companionName) {
+							//Add it to the original plant(plants[i])'s affinities
+							var companionId = _.result(_.findWhere(plants, { 'name': companionName }), 'id');
+							currentPlant.affinities[companionId] = 1;
+						}
+					});
+				});
+			});
+
+			//Cut out the plant near info since we're done with it
+			plantCompanionInfo = plantCompanionInfo.substr(positionOfFirstBreak+19);
+
+			//Get a list of things this plant should be kept away from
+			var keepAway = plantCompanionInfo.substring(0, plantCompanionInfo.indexOf('<br>')).replace('#xA0;', '').trim().split(', ');
+			//Go over the list of plants it should be away from
+			keepAway.map(function(enemy) {
+				//Go through all the plants in our list
+				var companions = fixName(enemy);
+				companions.map(function(companionName) {
+					plants.map(function(plant) {
+						if(plant.name === companionName) {
+							var companionId = _.result(_.findWhere(plants, { 'name': companionName }), 'id');
+							//Add it to the original plant(plants[i])'s affinities
+							currentPlant.affinities[companionId] = -1;
+						}
+					});
+				});
+			});
+		});
+	});
+
+	plants.map(function(plant) {
+		nounProject.getIconsByTerm(plant.name, {limit: 1}, function (err, data) {
+			var url = null;
+			if(!err && data.icons.length > 0) {
+				url = data.icons[0].preview_url_42
+			}
+			else {
+				console.log(err, data);
+				url = 'http://thecatapi.com/api/images/get?format=src&type=gif&size=small';
+			}
+
+			plant.url = url;
+
+			new Plant(plant).save(null, {method: 'insert'})
+				.then(function(plant) {
+					console.log(plant.attributes.name+' successfully saved to the database');
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+		});
+	});
+
+	// console.log(plants);
+});
+
+
+//var page = 'https://en.wikipedia.org/wiki/List_of_companion_plants';
+// request(page, function(error, response, html) {
+// 	if(error) {
+// 		return false;
+// 	}
+//
+// 	var $ = cheerio.load(html);
+//
+// 	$('#mw-content-text > table:nth-child(11) tr').each(function(i, elem) {
+// 		var $firstCell = $(this).children().first();
+// 		if($firstCell.is('td')) {
+// 			console.log($firstCell.text());
+// 		}
+// 	});
+// });
