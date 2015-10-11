@@ -1,6 +1,12 @@
 let React = require('react');
 
 module.exports = React.createClass({
+	getInitialState: function() {
+		return {
+			searchTerm: '',
+		};
+	},
+
 	componentWillMount: function() {
 		this.props.plants.on('sync', () => {
 			this.forceUpdate();
@@ -8,7 +14,11 @@ module.exports = React.createClass({
 	},
 
 	render: function() {
-		let plantButtons = this.props.plants.map((plant) => {
+		// let partialSearch = new RegExp(this.state.searchTerm, 'i');
+		let plantButtons = this.props.plants.filter((plant) => {
+			return plant.attributes.name.indexOf(this.state.searchTerm) > -1;
+			//return partialSearch.test(plant.attributes.name);
+		}).map((plant) => {
 			return (
 				<button key={'plant-button-'+plant.attributes.id} onClick={this.buttonClicked(plant.attributes.id)}>
 					<img src={plant.attributes.url} />
@@ -42,8 +52,8 @@ module.exports = React.createClass({
 	},
 
 	refinePlantList: function() {
-		return () => {
-			console.log(this.refs.searchBox.value);
-		};
+		this.setState({
+			searchTerm: this.refs.searchBox.value
+		});
 	},
 });
