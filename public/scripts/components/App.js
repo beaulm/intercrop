@@ -161,7 +161,6 @@ module.exports = React.createClass({
 					<div
 						draggable="false"
 						key={y+'-'+x}
-						className="plot-box"
 						style={style}
 						onMouseDown={this.setDragData(x, y, 'dragStart')}
 						onMouseEnter={this.setDragData(x, y, 'dragCurrent')}
@@ -173,30 +172,87 @@ module.exports = React.createClass({
 		.reduce(function(previousArray, currentRow) {
 			return previousArray.concat(currentRow);
 		}, []);
-
+		
 		return (
-			<div>
-				<section id="sizer">
+			<main>
+				<section className="plant-picker">
+					<select id="vegetable-list" ref="vegetable">
+						{veggieOptions}
+					</select>
+					<form className="search">
+						<label>
+							<h6>Find Plant</h6>
+							<div className="form-row">
+								<input type="text" placeholder="carrots" />
+								<button className="search"></button>
+							</div>
+						</label>
+					</form>
+					<div className="filter-results">
+						<button>
+							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/16090-42.png" />
+							<span>Cucmbers</span>
+						</button>
+						<button>
+							<div className="no-image">Ko</div>
+							<span>Kohlrabi</span>
+						</button>
+						<button>
+							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/50402-42.png" />
+							<span>Radishes</span>
+						</button>
+						<button>
+							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/177692-42.png" />
+							<span>Peas</span>
+						</button>
+						<button>
+							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/105370-42.png" />
+							<span>Potatos</span>
+						</button>
+						<button>
+							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/62621-42.png" />
+							<span>Lettuce</span>
+						</button>
+						<button>
+							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/113844-42.png" />
+							<span>Grapes</span>
+						</button>
+						<button>
+							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/180321-42.png" />
+							<span>Garlic</span>
+						</button>
+						<button>
+							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/105370-42.png" />
+							<span>Potatos</span>
+						</button>
+						<button>
+							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/62621-42.png" />
+							<span>Lettuce</span>
+						</button>
+						<button>
+							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/113844-42.png" />
+							<span>Grapes</span>
+						</button>
+						<button>
+							<img src="https://d30y9cdsu7xlg0.cloudfront.net/png/180321-42.png" />
+							<span>Garlic</span>
+						</button>
+					</div>
+				</section>
+				<section className="editor">
+					<div>
+						Companion Score: {this.state.affinityScore}
+					</div>
 					<form onSubmit={this.sizeChanged}>
 						Rows: <input type="number" ref="rows" defaultValue="20" />
 						Columns: <input type="number" ref="columns" defaultValue="20" />
 						<button>Resize</button>
 					</form>
-					Companion Score: {this.state.affinityScore}
-				</section>
-				<section>
-					<div id="plant-list">
-						<select id="vegetable-list" ref="vegetable">
-							{veggieOptions}
-						</select>
-					</div>
-					<div id="plot-view">
-						<div id="plot-grid" style={plotGridStyle}>
-							{boxElements}
-						</div>
+					<div id="plot-grid" style={plotGridStyle}>
+						{boxElements}
 					</div>
 				</section>
-			</div>
+			</main>
 		);
 	},
 
