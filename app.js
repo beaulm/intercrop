@@ -14,13 +14,14 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var knexLogger = require('knex-logger');
 var RedisStore = require('connect-redis')(session);
+var config = require('./config');
 // var passportSetup = require('./libs/passport-setup');
 
 var app = express();
 
-// var apiMiddleware = require('./middleware/bookshelf-api')({
-// 	path: path.join(__dirname, 'models')
-// });
+var apiMiddleware = require('./middleware/bookshelf-api')({
+	path: path.join(__dirname, 'models')
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,7 +29,7 @@ app.set('view engine', 'ejs');
 
 app.use(session({
 	store: new RedisStore(),
-	secret: 'ldkjfhglkdjfhglljdffjs',
+	secret: config.session.secret,
 	resave: false,
 	saveUninitialized: false
 }));
@@ -43,7 +44,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // passportSetup(app);
 
-// app.use('/api/v1', require('./routes/api1'), apiMiddleware);
+app.use('/api/v1', require('./routes/api1'), apiMiddleware);
 // app.use('/user', require('./routes/user'));
 app.use('/', require('./routes/index'));
 

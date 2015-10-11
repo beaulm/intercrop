@@ -23,34 +23,12 @@
 }
 
 .plot-box {
+  display: block;
+  background-size: cover;
   background-color: #FFF;
   border: 1px #999 dotted;
   box-sizing: border-box;
   float: left;
   height: 30px;
   width: 30px;
-}
-
-.type-1 {
-  background-color: #FFFF00;
-}
-
-.type-2 {
-  background-color: #FF6600;
-}
-
-.type-3 {
-  background-color: #FF0000;
-}
-
-.type-4 {
-  background-color: #000000;
-}
-
-.type-5 {
-  background-color: #00FF00;
-}
-
-.type-6 {
-  background-color: #0000FF;
 }

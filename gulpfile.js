@@ -1,20 +1,21 @@
 'use strict';
 
 var gulp    	= require( 'gulp' ),
-	gutil   	= require( 'gulp-util' ),
-	fork    	= require( 'child_process' ).fork,
+	gutil   		= require( 'gulp-util' ),
+	fork    		= require( 'child_process' ).fork,
 	// tinyLr  	= require( 'tiny-lr' ),
-	async   	= require( 'async' ),
-	watchify	= require( 'watchify' ),
+	async   		= require( 'async' ),
+	watchify		= require( 'watchify' ),
 	browserify 	= require( 'browserify' ),
-	babelify 	= require( 'babelify' ),
-	source 		= require( 'vinyl-source-stream' ),
-	buffer 		= require( 'vinyl-buffer' ),
-	assign 		= require( 'lodash.assign' ),
+	babelify 		= require( 'babelify' ),
+	source 			= require( 'vinyl-source-stream' ),
+	buffer 			= require( 'vinyl-buffer' ),
+	assign 			= require( 'lodash.assign' ),
 	sourcemaps 	= require( 'gulp-sourcemaps' ),
-	sass 		= require( 'gulp-sass' ),
-	rename 		= require( 'gulp-rename' ),
-	path 		= require( 'path' );
+	sass 				= require( 'gulp-sass' ),
+	rename 			= require( 'gulp-rename' ),
+	path 				= require( 'path' ),
+	fs					= require( 'fs' );
 
 /*
  * SERVER
@@ -86,9 +87,23 @@ gulp.task( 'server', function( callback ) {
 });
 
 
-gulp.task( 'watch', function() {
+gulp.task('watch', function() {
 	gulp.watch( dirs.app, app.restart );
 	gulp.watch('public/styles/**/*.{scss,sass}', ['serve-sass']);
+});
+
+gulp.task('config', function() {
+	var stat = fs.stat('./config.js', function(error, stat) {
+		if(error) {
+			gulp
+				.src('./config.example.js')
+				.pipe(rename(function(p) {
+					p.basename = 'config';
+					console.log(p);
+				}))
+				.pipe(gulp.dest('./'));
+		}
+	});
 });
 
 /*

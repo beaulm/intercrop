@@ -1,6 +1,6 @@
 let React = require('react');
 let Box = require('./Box');
-let plants = require('../plantData');
+let PlantCollection = require('../collections/PlantCollection');
 let _ = require('backbone/node_modules/underscore');
 
 const boxLength = 30;
@@ -19,8 +19,16 @@ module.exports = React.createClass({
     };
   },
 
+  componentWillMount: function() {
+    this.plants = new PlantCollection();
+    this.plants.fetch();
+    this.plants.on('sync', () => {
+      this.forceUpdate();
+    });
+  },
+
   getNeighborAffinity: function(state, plantId, x, y, xOffset, yOffset) {
-    let plantModel = plants.get(plantId);
+    let plantModel = this.plants.get(plantId);
     let neighborX = x+xOffset;
     let neighborY = y+yOffset;
     if(!plantModel) {
@@ -122,7 +130,7 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    let veggieOptions = plants.map(function(veggie) {
+    let veggieOptions = this.plants.map(function(veggie) {
       return <option value={veggie.id} key={veggie.id}>{veggie.get('name')}</option>
     });
 
@@ -141,8 +149,21 @@ module.exports = React.createClass({
           style[borderString] = this.getAffinityStyle(affinity.affinity);
           return style;
         }, {});
-        style = _.extend(style, this.getBoxStyles(this.state, plantId, x, y));
-        return <div draggable="false" key={y+'-'+x} className={'plot-box type-'+plantId} style={style} onMouseDown={this.setDragData(x, y, 'dragStart')} onMouseEnter={this.setDragData(x, y, 'dragCurrent')} onMouseUp={this.solidifyDrag(x, y)} />
+        style = _.extend(
+          style,
+          this.getBoxStyles(this.state, plantId, x, y),
+          { backgroundImage: 'url('+(plantId ? this.plants.get(plantId).get('url') : null)+')' }
+        );
+        return (
+          <div
+            draggable="false"
+            key={y+'-'+x}
+            className="plot-box"
+            style={style}
+            onMouseDown={this.setDragData(x, y, 'dragStart')}
+            onMouseEnter={this.setDragData(x, y, 'dragCurrent')}
+            onMouseUp={this.solidifyDrag(x, y)} />
+        );
       });
     })
     .reduce(function(previousArray, currentRow) {

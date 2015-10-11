@@ -5,5 +5,6 @@ module.exports = Backbone.Model.extend({
     id: null,
     name: '',
     affinities: {}
-  }
+  },
+  urlRoot: '/api/v1/plant',
 });
