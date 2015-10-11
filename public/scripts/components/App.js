@@ -172,30 +172,7 @@ module.exports = React.createClass({
 		.reduce(function(previousArray, currentRow) {
 			return previousArray.concat(currentRow);
 		}, []);
-
-		// <section id="sizer">
-		// 	<form onSubmit={this.sizeChanged}>
-		// 		Rows: <input type="number" ref="rows" defaultValue="20" />
-		// 		Columns: <input type="number" ref="columns" defaultValue="20" />
-		// 		<button>Resize</button>
-		// 	</form>
-		// 	Companion Score: {this.state.affinityScore}
-		// </section>
-		// <section>
-		// 	<div id="plant-list">
-		// 		<select id="vegetable-list" ref="vegetable">
-		// 			{veggieOptions}
-		// 		</select>
-		// 	</div>
-		// 	<div id="plot-view">
-		// 		<div id="plot-grid" style={plotGridStyle}>
-		// 			{boxElements}
-		// 		</div>
-		// 	</div>
-		// </section>
-
 		
-
 		return (
 			<main>
 				<section className="plant-picker">
