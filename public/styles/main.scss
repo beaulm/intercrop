@@ -1,34 +1,199 @@
-#sizer {
-	margin-bottom: 2rem;
+@import 'utils';
+@import '../../node_modules/ionicons/scss/ionicons-variables';
+@import '../../node_modules/ionicons/scss/ionicons-font';
+
+$navHeight: 68px;
+$plantPickerWidth: 180px;
+$borderColor: #e4e5e7;
+$borderHighlightColor: #34495D;
+$primaryButtonColor: #34495e;
+
+body, html, #app {
+	margin: 0;
+	background: #F1F3F6;
+	height: 100%;
 }
 
-#plot-view {
+h6 {
+	font-size: 16px;
+	margin: 0;
+	margin-bottom: 0.25em;
+	color: #333;
+}
+
+input {
+	display: block;
+	margin: 0;
+	border: 1px solid $borderColor;
+	padding: 0.55em;
+	outline: none;
+	transition: border-color 0.2s;
 	box-sizing: border-box;
-	height: 300px;
-	margin-right: 300px;
+
+	&:focus {
+		border-color: darken($borderColor, 10%);
+	}
 }
 
-#plant-list {
-	background: green;
-	float: right;
-	height: 300px;
-	width: 300px;
+nav {
+	height: $navHeight;
+	height: calculateRem($navHeight);
+	border-bottom: 1px solid $borderColor;
+	background: #fff;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	box-sizing: border-box;
 }
+
+.color-bar {
+	background: #f7f9fa;
+    height: 6px;
+    background-image: -webkit-linear-gradient(left, #34495e, #34495e 25%, #9b59b6 25%, #9b59b6 35%, #3498db 35%, #3498db 45%, #62cb31 45%, #62cb31 55%, #ffb606 55%, #ffb606 65%, #e67e22 65%, #e67e22 75%, #e74c3c 85%, #e74c3c 85%, #c0392b 85%, #c0392b 100%);
+    background-image: -moz-linear-gradient(left, #34495e, #34495e 25%, #9b59b6 25%, #9b59b6 35%, #3498db 35%, #3498db 45%, #62cb31 45%, #62cb31 55%, #ffb606 55%, #ffb606 65%, #e67e22 65%, #e67e22 75%, #e74c3c 85%, #e74c3c 85%, #c0392b 85%, #c0392b 100%);
+    background-image: -ms-linear-gradient(left, #34495e, #34495e 25%, #9b59b6 25%, #9b59b6 35%, #3498db 35%, #3498db 45%, #62cb31 45%, #62cb31 55%, #ffb606 55%, #ffb606 65%, #e67e22 65%, #e67e22 75%, #e74c3c 85%, #e74c3c 85%, #c0392b 85%, #c0392b 100%);
+    background-image: linear-gradient(to right, #34495e, #34495e 25%, #9b59b6 25%, #9b59b6 35%, #3498db 35%, #3498db 45%, #62cb31 45%, #62cb31 55%, #ffb606 55%, #ffb606 65%, #e67e22 65%, #e67e22 75%, #e74c3c 85%, #e74c3c 85%, #c0392b 85%, #c0392b 100%);
+    background-size: 100% 6px;
+    background-position: 50% 100%;
+    background-repeat: no-repeat;
+}
+
+.plant-picker {
+	width: $plantPickerWidth;
+	width: calculateRem($plantPickerWidth);
+	height: 100%;
+	background: #fff;
+	position: fixed;
+	top: $navHeight;
+	top: calculateRem($navHeight);
+	left: 0;
+	border-right: 1px solid $borderColor;
+	box-sizing: border-box;
+	padding: 0.75em;
+
+	.form-row {
+		position: relative;
+	}
+
+	.search {
+		input {
+			width: 100%;
+			padding-right: 36px;
+			padding-right: calculateRem(36px);
+		}
+		button {
+			@extend .ion;
+			position: absolute;
+			top: 0;
+			right: 0;
+			border: 0;
+			background: $primaryButtonColor;
+			cursor: pointer;
+			color: #fff;
+			font-size: 1.2em;
+			display: block;
+			float: right;
+			width: 27px;
+			width: calculateRem(27px);
+			height: 27px;
+			height: calculateRem(27px);
+			&:before { content: $ionicon-var-android-search; }
+		}
+	}
+
+	.filter-results {
+		button {
+			font-size: 16px;
+			background: none;
+			border: 0;
+			display: block;
+			padding: calculateRem(8px) 0;
+			cursor: pointer;
+			outline: none;
+		}
+
+		img, .no-image {
+			display: inline-block;
+			width: 34px;
+			width: calculateRem(34px);
+			height: 34px;
+			height: calculateRem(34px);
+			vertical-align: top;
+		}
+
+		img {
+			opacity: 0.7;
+		}
+
+		span {
+			display: inline-block;
+			line-height: 34px;
+			vertical-align: top;
+			margin-left: 0.4em;
+			margin-left: 0.4rem;
+		}
+
+		.no-image {
+			text-align: center;
+			background: #ececec;
+			border-radius: 50%;
+			color: #aaa;
+			line-height: 34px;
+			line-height: calculateRem(34px);
+		}
+	}
+}
+
+.editor {
+	height: 500px;
+	margin-left: $plantPickerWidth;
+	margin-top: $navHeight;
+	padding: 1em;
+}
+
+// #sizer {
+// 	margin-bottom: 2rem;
+// }
+
+// #plot-view {
+// 	box-sizing: border-box;
+// 	height: 300px;
+// 	margin-right: 300px;
+// }
+
+// #plant-list {
+// 	background: green;
+// 	float: right;
+// 	height: 300px;
+// 	width: 300px;
+// }
 
 #plot-grid {
 	border: 1px solid black;
 	height: 600px;
 	margin: auto;
 	width: 600px;
+
+	div {
+		display: block;
+		background-size: cover;
+		background-color: #FFF;
+		border: 1px #999 dotted;
+		box-sizing: border-box;
+		float: left;
+		height: 30px;
+		width: 30px;
+	}
 }
 
-.plot-box {
-	display: block;
-	background-size: cover;
-	background-color: #FFF;
-	border: 1px #999 dotted;
-	box-sizing: border-box;
-	float: left;
-	height: 30px;
-	width: 30px;
-}
+// .plot-box {
+// 	display: block;
+// 	background-size: cover;
+// 	background-color: #FFF;
+// 	border: 1px #999 dotted;
+// 	box-sizing: border-box;
+// 	float: left;
+// 	height: 30px;
+// 	width: 30px;
+// }
