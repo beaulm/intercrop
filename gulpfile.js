@@ -99,7 +99,6 @@ gulp.task('config', function() {
 				.src('./config.example.js')
 				.pipe(rename(function(p) {
 					p.basename = 'config';
-					console.log(p);
 				}))
 				.pipe(gulp.dest('./'));
 		}
