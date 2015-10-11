@@ -1,5 +1,5 @@
 /node_modules
 .DS_Store
-/scripts/bundle.js
-/scripts/bundle.js.map
-/styles/main.sass.css
+/public/scripts/bundle.js
+/public/scripts/bundle.js.map
+/public/styles/main.scss.css
