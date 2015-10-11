@@ -1,5 +1,4 @@
 let React = require('react');
-// let _ = require('backbone/node_modules/underscore');
 
 module.exports = React.createClass({
 	getInitialState: function() {
@@ -17,7 +16,7 @@ module.exports = React.createClass({
 	render: function() {
 		// let partialSearch = new RegExp(this.state.searchTerm, 'i');
 		let plantButtons = this.props.plants.filter((plant) => {
-	    return plant.attributes.name.indexOf(this.state.searchTerm) > -1;
+			return plant.attributes.name.indexOf(this.state.searchTerm) > -1;
 			//return partialSearch.test(plant.attributes.name);
 		}).map((plant) => {
 			return (
