@@ -1,0 +1,35 @@
+@import 'vars';
+.resize-form {
+	font-size: 13px;
+
+	input {
+		display: inline-block;
+		width: 4em;
+	}
+
+	span {
+		margin: 0 0.5em;
+	}
+
+	select {
+		display: inline-block;
+		margin-left: 0.5em;
+	}
+
+	button {
+
+		margin-left: 0.5em;
+
+		&.save-resize {
+			background: $primaryButtonColor;
+			border: 1px solid $primaryButtonColor;
+			color: #fff;
+
+			&:hover {
+				background: $primaryButtonColor;
+				border: 1px solid $primaryButtonColor;
+				color: #fff;
+			}
+		}
+	}
+}

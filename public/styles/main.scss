@@ -1,12 +1,8 @@
 @import 'utils';
+@import 'vars';
+@import 'resize-button';
 @import '../../node_modules/ionicons/scss/ionicons-variables';
 @import '../../node_modules/ionicons/scss/ionicons-font';
-
-$navHeight: 68px;
-$plantPickerWidth: 180px;
-$borderColor: #e4e5e7;
-$borderHighlightColor: #34495D;
-$primaryButtonColor: #34495e;
 
 body, html, #app {
 	margin: 0;
@@ -22,7 +18,7 @@ h6 {
 	color: #333;
 }
 
-input {
+input, select {
 	display: block;
 	margin: 0;
 	border: 1px solid $borderColor;
@@ -34,6 +30,11 @@ input {
 	&:focus {
 		border-color: darken($borderColor, 10%);
 	}
+}
+
+select {
+	height: 27px;
+	height: calculateRem(28px);
 }
 
 nav {
