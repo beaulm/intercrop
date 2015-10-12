@@ -155,6 +155,7 @@ gulp.task('serve-sass', function() {
  * DEFAULT
  */
 gulp.task( 'default', [ 'js-bundle', 'serve-sass', 'server', 'watch' ] );
+gulp.task( 'build', ['js-bundle', 'serve-sass']);
 
 // gulp.task('build', ['clean', 'copy', 'js', 'css', 'sass', 'images']);
 

@@ -193,7 +193,7 @@ module.exports = React.createClass({
 				<section className="editor">
 					<div className="toolbar">
 						<div className="left">
-							<button className={'remove' + (this.state.currentPlant ? '' : ' active')}onClick={this.setRemove}><i /> Remove Plants</button>
+							<button className={'remove' + (this.state.currentPlant ? '' : ' active')}onClick={this.setRemove}><i /> Eraser</button>
 						</div>
 						<span>Companion Score: {this.state.affinityScore}</span>
 						<div className="right">

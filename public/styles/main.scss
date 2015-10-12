@@ -47,6 +47,7 @@ nav {
 	left: 0;
 	width: 100%;
 	box-sizing: border-box;
+	z-index: 1;
 }
 
 .btn-default {
@@ -98,29 +99,47 @@ nav {
 	.search {
 		margin: 0.75em;
 
+		.form-row {
+			position: relative;
+			@extend .ion;
+
+			&:after {
+				content: $ionicon-var-android-search;
+				position: absolute;
+				right: 6px;
+				right: calculateRem(6px);
+				top: 6px;
+				top: calculateRem(6px);
+				color: #ccc;
+			}
+		}
+
 		input {
 			width: 100%;
 			padding-right: 36px;
 			padding-right: calculateRem(36px);
 		}
-		button {
-			@extend .ion;
-			position: absolute;
-			top: 0;
-			right: 0;
-			border: 0;
-			background: $primaryButtonColor;
-			cursor: pointer;
-			color: #fff;
-			font-size: 1.2em;
-			display: block;
-			float: right;
-			width: 27px;
-			width: calculateRem(27px);
-			height: 27px;
-			height: calculateRem(27px);
-			&:before { content: $ionicon-var-android-search; }
-		}
+		// .hint {
+		// 	@extend .ion;
+		// 	display: block;
+		// 	outline: none;
+		// 	position: absolute;
+		// 	top: 0;
+		// 	right: 0;
+		// 	border: 0;
+		// 	background: #fff;
+		// 	color: #ccc;
+		// 	font-size: 1.2em;
+		// 	display: block;
+		// 	float: right;
+		// 	width: 27px;
+		// 	width: calculateRem(27px);
+		// 	height: 27px;
+		// 	height: calculateRem(27px);
+		// 	border: 1px solid $borderColor;
+		// 	border-left: none;
+		// 	&:before { content: $ionicon-var-android-search; }
+		// }
 	}
 
 	.filter-results {
@@ -199,6 +218,7 @@ nav {
 	text-align: center;
 	line-height: 33px;
 	line-height: calculateRem(33px);
+	margin-bottom: 1em;
 	
 	button {
 		@extend .btn-default;
