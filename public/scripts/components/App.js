@@ -188,7 +188,7 @@ module.exports = React.createClass({
 		}, []);
 
 		return (
-			<main>
+			<main onMouseUp={this.solidifyDrag()}>
 				<PlantPicker plants={this.plants} dispatcher={this.dispatcher} />
 				<section className="editor">
 					<div className="toolbar">
@@ -246,8 +246,9 @@ module.exports = React.createClass({
 	},
 
 	setDragData: function(x, y, property) {
-		return () => {
+		return (e) => {
 			if(property !== 'dragStart' && !this.state.dragStart) return;
+			e.preventDefault();
 			let stateData = {};
 			stateData[property] = {
 				x: x,
@@ -258,9 +259,14 @@ module.exports = React.createClass({
 	},
 
 	solidifyDrag: function(x, y) {
-		return () => {
+		return (e) => {
 			if(!this.state.dragStart || !this.state.dragCurrent) {
 				return;
+			}
+			e.preventDefault();
+			if(_.isUndefined(x) || _.isUndefined(y)) {
+				x = this.state.dragCurrent.x;
+				y = this.state.dragCurrent.y;
 			}
 			for(let yy=Math.min(this.state.dragStart.y, y); yy<=Math.max(this.state.dragStart.y, y); yy++) {
 				for(let xx=Math.min(this.state.dragStart.x, x); xx<=Math.max(this.state.dragStart.x, x); xx++) {
