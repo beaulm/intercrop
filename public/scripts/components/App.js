@@ -3,6 +3,7 @@ let PlantCollection = require('../collections/PlantCollection');
 let _ = require('backbone/node_modules/underscore');
 let PlantPicker = require('./PlantPicker');
 let ResizeButton = require('./ResizeButton');
+let Backbone = require('backbone');
 
 const boxLength = 30;
 
@@ -29,6 +30,8 @@ module.exports = React.createClass({
 		this.plants.on('sync', () => {
 			this.forceUpdate();
 		});
+		this.dispatcher = _.extend({}, Backbone.Events);
+		this.dispatcher.on('currentPlantChanged', this.setCurrentPlant);
 	},
 
 	getNeighborAffinity: function(state, plantId, x, y, xOffset, yOffset) {
@@ -130,10 +133,6 @@ module.exports = React.createClass({
 	},
 
 	render: function() {
-		let veggieOptions = this.plants.map(function(veggie) {
-			return <option value={veggie.id} key={veggie.id}>{veggie.get('name')}</option>
-		});
-
 		let plotGridStyle = {
 			height: (this.state.height*boxLength)+'px',
 			width: (this.state.width*boxLength)+'px',
@@ -190,11 +189,11 @@ module.exports = React.createClass({
 
 		return (
 			<main>
-				<PlantPicker plants={this.plants} onClick={this.setCurrentPlant} />
+				<PlantPicker plants={this.plants} dispatcher={this.dispatcher} />
 				<section className="editor">
 					<div className="toolbar">
 						<div className="left">
-							<button className="remove" onClick={this.setRemove}><i /> Remove Plants</button>
+							<button className={'remove' + (this.state.currentPlant ? '' : ' active')}onClick={this.setRemove}><i /> Remove Plants</button>
 						</div>
 						<span>Companion Score: {this.state.affinityScore}</span>
 						<div className="right">
@@ -218,7 +217,7 @@ module.exports = React.createClass({
 		});
 	},
 
-	generatePlantMatrix: function(height, width, currentPlantMatrix) {
+	generatePlantMatrix: function(width, height, currentPlantMatrix) {
 		if(!currentPlantMatrix) {
 			currentPlantMatrix = [[]];
 		}
@@ -294,8 +293,6 @@ module.exports = React.createClass({
 	},
 
 	setRemove: function(e) {
-		this.setState({
-			currentPlant: 0
-		});
+		this.dispatcher.trigger('currentPlantChanged', 0);
 	}
 });

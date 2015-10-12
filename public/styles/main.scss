@@ -212,6 +212,11 @@ nav {
 			i {
 				&:before { content: $ionicon-var-backspace; }
 			}
+
+			&.active {
+				color: #fff;
+				background: $primaryButtonColor;
+			}
 		}
 
 		&.resize {

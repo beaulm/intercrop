@@ -13,6 +13,9 @@ module.exports = React.createClass({
 		this.props.plants.on('sync', () => {
 			this.forceUpdate();
 		});
+		this.props.dispatcher.on('currentPlantChanged', (plantId) => {
+			this.setState({ currentPlant: plantId });
+		});
 	},
 
 	render: function() {
@@ -45,10 +48,7 @@ module.exports = React.createClass({
 	},
 
 	buttonClicked: function(plantId) {
-		this.setState({
-			currentPlant: plantId
-		});
-		this.props.onClick(plantId);
+		this.props.dispatcher.trigger('currentPlantChanged', plantId);
 	},
 
 	refinePlantList: function() {
