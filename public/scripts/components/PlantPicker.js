@@ -33,7 +33,7 @@ module.exports = React.createClass({
 						<h6>Find Plant</h6>
 						<div className="form-row">
 							<input ref="searchBox" type="text" placeholder="carrots" onKeyUp={this.refinePlantList} />
-							<button className="search"></button>
+							<button></button>
 						</div>
 					</label>
 				</form>

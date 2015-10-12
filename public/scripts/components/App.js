@@ -158,9 +158,17 @@ module.exports = React.createClass({
 				}, {});
 				style = _.extend(
 					style,
-					this.getBoxStyles(this.state, plantId, x, y),
-					{ backgroundImage: 'url('+(plantId ? this.plants.get(plantId).get('url') : null)+')' }
+					this.getBoxStyles(this.state, plantId, x, y)
 				);
+				let innerElement = null;
+				if(plantId) {
+					if(this.plants.get(plantId).get('url')) {
+						innerElement = <img src={this.plants.get(plantId).get('url')} />
+					}
+					else {
+						innerElement = <div className="no-image">{this.plants.get(plantId).get('name').substr(0, 2)}</div>;
+					}
+				}
 				return (
 					<div
 						draggable="false"
@@ -170,7 +178,9 @@ module.exports = React.createClass({
 						onMouseEnter={this.setDragData(x, y, 'dragCurrent')}
 						onMouseUp={this.solidifyDrag(x, y)}
 						onClick={this.updatePlant(x, y)}
-					/>
+					>
+						{innerElement}
+					</div>
 				);
 			});
 		})

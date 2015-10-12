@@ -13,6 +13,8 @@ var Plant = require('../models/Plant');
 var request = require('request');
 var cheerio = require('cheerio');
 var _ = require('lodash');
+var async = require('async');
+var Bottleneck = require('bottleneck');
 
 var page = 'http://www.motherearthnews.com/organic-gardening/companion-planting-guide-zmaz81mjzraw.aspx';
 
@@ -118,30 +120,41 @@ request(page, function(error, response, html) {
 		});
 	});
 
-	plants.map(function(plant) {
-		nounProject.getIconsByTerm(plant.name, {limit: 1}, function (err, data) {
+	var limiter = new Bottleneck(1, 1000);
+
+
+	async.eachSeries(plants, function iterator(plant, cb) {
+		var name = plant.name;
+		if(name.substr(name.length - 3) == 'ies') {
+			name = name.substr(0, name.length - 3)+'y';
+			console.log(plant.name, name);
+		}
+		else if(name.substr(name.length - 2) == 'es') {
+			name = name.substr(0, name.length - 2);
+			console.log(plant.name, name);
+		}
+		else if(name.substr(name.length - 1) == 's') {
+			name = name.substr(0, name.length - 1);
+			console.log(plant.name, name);
+		}
+		limiter.submit(nounProject.getIconsByTerm.bind(nounProject), name, {limit: 1}, function (err, data) {
 			var url = null;
 			if(!err && data.icons.length > 0) {
 				url = data.icons[0].preview_url_42
-			}
-			else {
-				console.log(err, data);
-				url = 'http://thecatapi.com/api/images/get?format=src&type=gif&size=small&blah='+plant.id;
 			}
 
 			plant.url = url;
 
 			new Plant(plant).save(null, {method: 'insert'})
-				.then(function(plant) {
-					console.log(plant.attributes.name+' successfully saved to the database');
-				})
-				.catch(function(error) {
-					console.log(error);
-				});
-		});
+			.then(function(plant) {
+				console.log(plant.attributes.name+' successfully saved to the database');
+				cb();
+			})
+			.catch(cb);
+		})
+	}, function(err) {
+		console.log('done!', err.toString())
 	});
-
-	// console.log(plants);
 });
 
 
