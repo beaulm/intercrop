@@ -4,8 +4,10 @@ let _ = require('backbone/node_modules/underscore');
 let PlantPicker = require('./PlantPicker');
 let ResizeButton = require('./ResizeButton');
 let Backbone = require('backbone');
+let Modal = require('./Modal');
 
 const boxLength = 30;
+const appName = 'Intercrop';
 
 module.exports = React.createClass({
 	getInitialState: function() {
@@ -21,6 +23,7 @@ module.exports = React.createClass({
 			plantMatrix: this.generatePlantMatrix(width, height),
 			affinityScore: 0,
 			currentPlant: 1,
+			showModal: true,
 		};
 	},
 
@@ -187,6 +190,10 @@ module.exports = React.createClass({
 			return previousArray.concat(currentRow);
 		}, []);
 
+		var buttons = [
+			<button className="btn">Test</button>
+		];
+
 		return (
 			<main onMouseUp={this.solidifyDrag()}>
 				<PlantPicker plants={this.plants} dispatcher={this.dispatcher} />
@@ -204,6 +211,10 @@ module.exports = React.createClass({
 						{boxElements}
 					</div>
 				</section>
+				<Modal isOpen={this.state.showModal} title={'Welcome to '+appName} footer={buttons}>
+					<h1>Modal Content</h1>
+					<p>Etc.</p>
+				</Modal>
 			</main>
 		);
 	},
