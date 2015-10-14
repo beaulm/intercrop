@@ -190,9 +190,12 @@ module.exports = React.createClass({
 			return previousArray.concat(currentRow);
 		}, []);
 
-		var buttons = [
-			<button className="btn">Test</button>
-		];
+		var footer = (
+			<footer>
+				<button className="btn lg primary" key="generate">Generate a layout for me</button>
+				<button onClick={this.closeModal} className="btn lg" key="build">Let me build my own layout</button>
+			</footer>
+		);
 
 		return (
 			<main onMouseUp={this.solidifyDrag()}>
@@ -211,9 +214,13 @@ module.exports = React.createClass({
 						{boxElements}
 					</div>
 				</section>
-				<Modal isOpen={this.state.showModal} title={'Welcome to '+appName} footer={buttons}>
-					<h1>Modal Content</h1>
-					<p>Etc.</p>
+				<Modal
+					isOpen={this.state.showModal}
+					title={'Welcome to '+appName+', a garden layour generator'}
+					footer={footer}
+					onClose={this.closeModal}>
+
+					<p>Intercropping is a technique that you can use in your garden to produce a greater yield on a given piece of land or plant bed. Careful planning is required, taking into account the soil, climate, crops, and varieties. Our garden layout generator can help you plan your garden in a way that will help you to get the most out of your land.</p>
 				</Modal>
 			</main>
 		);
@@ -311,5 +318,9 @@ module.exports = React.createClass({
 
 	setRemove: function(e) {
 		this.dispatcher.trigger('currentPlantChanged', 0);
+	},
+
+	closeModal: function() {
+		this.setState({ showModal: false });
 	}
 });

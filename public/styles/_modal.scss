@@ -27,6 +27,14 @@
 		.title {
 			float: left;
 		}
+
+		.close {
+			display: block;
+			float: right;
+			background: none;
+			border: 0;
+			cursor: pointer;
+		}
 	}
 
 	section {

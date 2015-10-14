@@ -1,0 +1,33 @@
+@import 'modal';
+@import 'vars';
+@import '../../node_modules/ionicons/scss/ionicons-variables';
+@import '../../node_modules/ionicons/scss/ionicons-font';
+
+.modal {
+
+	header {
+
+		background: #F7F9FA;
+		border-bottom: 1px solid $borderColor;
+
+		.close {
+			@extend .ion;
+
+			&:after {
+				content: $ionicon-var-close;
+			}
+		}
+
+	}
+
+	footer {
+		background: #F7F9FA;
+		border-top: 1px solid $borderColor;
+
+		button {
+			float: right;
+			margin-left: 1em;
+		}
+	}
+
+}
