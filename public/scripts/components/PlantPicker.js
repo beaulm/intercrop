@@ -30,7 +30,7 @@ module.exports = React.createClass({
 		});
 
 		return (
-			<section className="plant-picker">
+			<section className="plant-picker" style={this.props.style}>
 				<form className="search">
 					<label>
 						<h6>Find Plant</h6>

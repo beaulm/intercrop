@@ -4,7 +4,7 @@ let _ = require('backbone/node_modules/underscore');
 let PlantPicker = require('./PlantPicker');
 let ResizeButton = require('./ResizeButton');
 let Backbone = require('backbone');
-let Modal = require('./Modal');
+let WelcomeModal = require('./WelcomeModal');
 
 const boxLength = 30;
 const appName = 'Intercrop';
@@ -190,13 +190,6 @@ module.exports = React.createClass({
 			return previousArray.concat(currentRow);
 		}, []);
 
-		var footer = (
-			<footer>
-				<button className="btn lg primary" key="generate">Generate a layout for me</button>
-				<button onClick={this.closeModal} className="btn lg" key="build">Let me build my own layout</button>
-			</footer>
-		);
-
 		return (
 			<main onMouseUp={this.solidifyDrag()}>
 				<PlantPicker plants={this.plants} dispatcher={this.dispatcher} />
@@ -214,14 +207,7 @@ module.exports = React.createClass({
 						{boxElements}
 					</div>
 				</section>
-				<Modal
-					isOpen={this.state.showModal}
-					title={'Welcome to '+appName+', a garden layour generator'}
-					footer={footer}
-					onClose={this.closeModal}>
-
-					<p>Intercropping is a technique that you can use in your garden to produce a greater yield on a given piece of land or plant bed. Careful planning is required, taking into account the soil, climate, crops, and varieties. Our garden layout generator can help you plan your garden in a way that will help you to get the most out of your land.</p>
-				</Modal>
+				<WelcomeModal isOpen={this.state.showModal} onClose={this.closeModal} plants={this.plants} dispatcher={this.dispatcher} />
 			</main>
 		);
 	},
