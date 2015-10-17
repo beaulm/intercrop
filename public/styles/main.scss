@@ -2,6 +2,8 @@
 @import 'vars';
 @import 'resize-button';
 @import 'custom-modal';
+@import 'form';
+@import 'pick-quantity-row';
 @import '../../node_modules/ionicons/scss/ionicons-variables';
 @import '../../node_modules/ionicons/scss/ionicons-font';
 
@@ -19,7 +21,7 @@ h6 {
 	color: #333;
 }
 
-input, select {
+input {
 	display: block;
 	margin: 0;
 	border: 1px solid $borderColor;
@@ -33,10 +35,10 @@ input, select {
 	}
 }
 
-select {
-	height: 27px;
-	height: calculateRem(28px);
-}
+// select {
+// 	height: 27px;
+// 	height: calculateRem(28px);
+// }
 
 nav {
 	height: $navHeight;
@@ -111,6 +113,8 @@ nav {
 	.form-row {
 		position: relative;
 		width: 100%;
+		margin: 0;
+		padding: 0;
 	}
 
 	.search {
@@ -218,6 +222,9 @@ nav {
 	-ms-user-select: none;
 	user-select: none;
 	text-transform: capitalize;
+	width: 2.125em;
+	height: 2.125em;
+	line-height: 2.125em;
 }
 
 .editor {

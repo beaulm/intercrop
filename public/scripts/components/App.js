@@ -3,11 +3,9 @@ let PlantCollection = require('../collections/PlantCollection');
 let _ = require('backbone/node_modules/underscore');
 let PlantPicker = require('./PlantPicker');
 let ResizeButton = require('./ResizeButton');
-let Backbone = require('backbone');
 let WelcomeModal = require('./WelcomeModal');
 
 const boxLength = 30;
-const appName = 'Intercrop';
 
 module.exports = React.createClass({
 	getInitialState: function() {
@@ -33,8 +31,6 @@ module.exports = React.createClass({
 		this.plants.on('sync', () => {
 			this.forceUpdate();
 		});
-		this.dispatcher = _.extend({}, Backbone.Events);
-		this.dispatcher.on('currentPlantChanged', this.setCurrentPlant);
 	},
 
 	getNeighborAffinity: function(state, plantId, x, y, xOffset, yOffset) {
@@ -192,11 +188,11 @@ module.exports = React.createClass({
 
 		return (
 			<main onMouseUp={this.solidifyDrag()}>
-				<PlantPicker plants={this.plants} dispatcher={this.dispatcher} />
+				<PlantPicker plants={this.plants} currentPlant={this.state.currentPlant} onChange={this.setCurrentPlant} />
 				<section className="editor">
 					<div className="toolbar">
 						<div className="left">
-							<button className={'remove' + (this.state.currentPlant ? '' : ' active')}onClick={this.setRemove}><i /> Eraser</button>
+							<button className={'remove' + (this.state.currentPlant ? '' : ' active')} onClick={this.setRemove}><i /> Eraser</button>
 						</div>
 						<span>Companion Score: {this.state.affinityScore}</span>
 						<div className="right">
@@ -207,7 +203,7 @@ module.exports = React.createClass({
 						{boxElements}
 					</div>
 				</section>
-				<WelcomeModal isOpen={this.state.showModal} onClose={this.closeModal} plants={this.plants} dispatcher={this.dispatcher} />
+				<WelcomeModal isOpen={this.state.showModal} onClose={this.closeModal} plants={this.plants.clone()} />
 			</main>
 		);
 	},
@@ -296,14 +292,16 @@ module.exports = React.createClass({
 		}
 	},
 
-	setCurrentPlant: function(plantId) {
+	setCurrentPlant: function(plant) {
 		this.setState({
-			currentPlant: plantId
+			currentPlant: plant.id
 		});
 	},
 
 	setRemove: function(e) {
-		this.dispatcher.trigger('currentPlantChanged', 0);
+		this.setState({
+			currentPlant: 0
+		});
 	},
 
 	closeModal: function() {

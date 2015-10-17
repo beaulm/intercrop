@@ -5,19 +5,73 @@
 
 .modal {
 
+	.close {
+		@extend .ion;
+
+		&:after {
+			content: $ionicon-var-close;
+		}
+	}
+
 	header {
 
 		background: #F7F9FA;
 		border-bottom: 1px solid $borderColor;
 
-		.close {
-			@extend .ion;
+	}
 
-			&:after {
-				content: $ionicon-var-close;
-			}
+	.pick-page {
+		> section {
+			overflow: hidden;
+		}
+	}
+
+	.picked-plants {
+		box-sizing: border-box;
+		overflow: hidden;
+
+		.no-image, img {
+			display: block;
+			font-size: 21.44px;
+			font-size: calculateRem(21.44px);
+			margin: 0 auto;
 		}
 
+		.picked-plant {
+			padding: 1em;
+			float: left;
+			border: 1px solid #ccc;
+			margin: 0.78em;
+			width: 120px;
+			width: calculateRem(120px);
+			height: 98px;
+			height: calculateRem(98px);
+			box-sizing: border-box;
+			overflow: hidden;
+			text-align: center;
+			position: relative;
+
+			.plant-name {
+				font-size: 0.875em;
+				margin-top: 0.2em;
+			}
+
+			.close {
+				position: absolute;
+				top: 0.6em;
+				right: 0.6em;
+				color: #999;
+				cursor: pointer;
+			}
+		}
+	}
+
+	.plant-picker {
+		padding: 0;
+	}
+
+	.no-padding {
+		padding: 0;
 	}
 
 	footer {
