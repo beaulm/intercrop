@@ -141,9 +141,11 @@ gulp.task('serve-sass', function() {
 	.pipe(rename(function(p) {
 		p.basename += p.extname;
 	}))
+	.pipe(sourcemaps.init())
 	.pipe(sass({
 		errLogToConsole: true
 	}).on('error', sass.logError))
+	.pipe(sourcemaps.write())
 	.pipe(rename(function(p) {
 		p.extname = '.css';
 	}))
