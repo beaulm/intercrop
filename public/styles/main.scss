@@ -219,7 +219,7 @@ nav {
 	line-height: 33px;
 	line-height: calculateRem(33px);
 	margin-bottom: 1em;
-	
+
 	button {
 		@extend .btn-default;
 		font-size: 14px;
@@ -237,6 +237,12 @@ nav {
 				color: #fff;
 				background: $primaryButtonColor;
 			}
+		}
+
+		&.undo {
+			@extend .ion;
+			&:before { content: $ionicon-var-ios-undo; }
+			margin-left: .5em;
 		}
 
 		&.resize {
