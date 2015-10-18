@@ -4,6 +4,7 @@ let _ = require('backbone/node_modules/underscore');
 let PlantPicker = require('./PlantPicker');
 let ResizeButton = require('./ResizeButton');
 let WelcomeModal = require('./WelcomeModal');
+let $ = require('jquery');
 
 const boxLength = 30;
 
@@ -203,7 +204,7 @@ module.exports = React.createClass({
 						{boxElements}
 					</div>
 				</section>
-				<WelcomeModal isOpen={this.state.showModal} onClose={this.closeModal} plants={this.plants.clone()} />
+				<WelcomeModal isOpen={this.state.showModal} onClose={this.closeModal} onFinish={this.generateLayout} plants={this.plants.clone()} />
 			</main>
 		);
 	},
@@ -306,5 +307,50 @@ module.exports = React.createClass({
 
 	closeModal: function() {
 		this.setState({ showModal: false });
+	},
+
+	generateLayout: function(size, pickedPlants) {
+		let width = null;
+		let height = null;
+		if(size.units === 'imperial') {
+			width = (2.54*12*parseInt(size.width.feet) + 2.54*parseInt(size.width.inches))/100;
+			height = (2.54*12*parseInt(size.height.feet) + 2.54*parseInt(size.height.inches))/100;
+		}
+		else if(size.units === 'metric') {
+			width = parseFloat(size.width.meters);
+			height = parseFloat(size.height.meters);
+		}
+
+		let quantities = pickedPlants.map(function(plant) {
+			return {
+				plantId: plant.id,
+				quantity: plant.get('quantity') || 0
+			};
+		});
+
+		$.ajax({
+			type: 'POST',
+			url: '/api/v1/generate-layout',
+			dataType: 'json',
+			contentType: 'application/json',
+			async: true,
+			data: JSON.stringify({
+				width: width,
+				height: height,
+				quantities: quantities,
+				algorithm: 'test'
+			}),
+			success: (result) => {
+				this.setState({
+					width: result.width,
+					height: result.height,
+					plantMatrix: result.matrix
+				});
+				this.closeModal();
+			},
+			error: (err) => {
+				console.log(err);
+			}
+		});
 	}
 });

@@ -43,7 +43,7 @@ module.exports = React.createClass({
 			this.setState({ error: 'Please fill in a positive quantity for at least three plants.' });
 		}
 		else {
-			this.props.onClose();
+			this.props.onFinish();
 		}
 	}
 });

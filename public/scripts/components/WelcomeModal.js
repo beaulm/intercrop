@@ -50,6 +50,7 @@ module.exports = React.createClass({
 			case 'plant-quantities':
 				page = <WelcomeModalQuantitiesPage
 							onClose={this.props.onClose}
+							onFinish={this.finish}
 							onSwitchPage={this.switchPage}
 							plants={this.state.pickedPlants} />
 			break;
@@ -76,5 +77,8 @@ module.exports = React.createClass({
 		this.setState({
 			size: size
 		})
+	},
+	finish: function() {
+		this.props.onFinish(this.state.size, this.state.pickedPlants);
 	}
 });

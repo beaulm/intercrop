@@ -7,6 +7,8 @@ var Plant = require('../models/Plant');
 var NounProject = require('the-noun-project');
 var config = require('../config');
 var nounProject = new NounProject(config.nounProject);
+var path = require('path');
+var algorithmFactory = require('../libs/algorithm-factory')({path: path.join(__dirname, '../libs/algorithms')});
 
 router.post('/plant', function(req, res, next) {
 	if(!req.body.name) {
@@ -65,59 +67,110 @@ router.post('/plant', function(req, res, next) {
 	});
 });
 
-// router.get('/plant', function(req, res, next) {
-// 	res.json([
-// 		{
-// 			id: 1,
-// 			name: 'Onion',
-// 			affinities: {
-// 				2: -1,
-// 				3: -1,
-// 				4: -1,
-// 				5: -1,
-// 				6: -1,
-// 			}
-// 		},
-// 		{
-// 			id: 2,
-// 			name: 'Carrot',
-// 			affinities: {
-// 				3: 1,
-// 			}
-// 		},
-// 		{
-// 			id: 3,
-// 			name: 'Tomato',
-// 			affinities: {
-// 				2: 1,
-// 				6: 1,
-// 			}
-// 		},
-// 		{
-// 			id: 4,
-// 			name: 'Lettuce',
-// 			affinities: {}
-// 		},
-// 		{
-// 			id: 5,
-// 			name: 'Bean',
-// 			affinities: {
-// 				2: 1,
-// 			}
-// 		},
-// 		{
-// 			id: 6,
-// 			name: 'Basil',
-// 			affinities: {
-// 				1: -1,
-// 			}
-// 		},
-// 		{
-// 			id: 7,
-// 			name: 'Spinach',
-// 			affinities: {}
-// 		},
-// 	]);
-// });
+router.post('/generate-layout', function(req, res) {
+	req.body.algorithm = req.body.algorithm || 'test';
+	req.body.algorithm = req.body.algorithm.toLowerCase();
+	if(!validator.isAlphanumeric(req.body.algorithm)) {
+		return res.status(400).json({
+			message: 'Invalid algorithm name',
+			status: 400,
+		});
+	}
+	if(!req.body.width) {
+		return res.status(400).json({
+			message: 'A width is required',
+			status: 400,
+		});
+	}
+	req.body.width = parseFloat(req.body.width);
+	if(isNaN(req.body.width)) {
+		return res.status(400).json({
+			message: 'The width must be a number',
+			status: 400,
+		});
+	}
+	if(!req.body.height) {
+		return res.status(400).json({
+			message: 'A height is required',
+			status: 400,
+		});
+	}
+	req.body.height = parseFloat(req.body.height);
+	if(isNaN(req.body.height)) {
+		return res.status(400).json({
+			message: 'The height must be a number',
+			status: 400,
+		});
+	}
+	if(!_.isArray(req.body.quantities)) {
+		return res.status(400).json({
+			message: 'The quantities parameter must be an array',
+			status: 400,
+		});
+	}
+
+	var totalQuantities = 0;
+	var plantIds = [];
+	var quantitiesById = {};
+	for(var i=0; i<req.body.quantities.length; i++) {
+		var quantity = req.body.quantities[i];
+		if(quantity.quantity) {
+			totalQuantities++;
+		}
+		if(!quantity.plantId) {
+			return res.status(400).json({
+				message: 'All listed quantities must have an plantId property',
+				status: 400,
+			});
+		}
+		if(!quantity.quantity) {
+			return res.status(400).json({
+				message: 'All listed quantities must have an quantity property',
+				status: 400,
+			});
+		}
+		plantIds.push(quantity.plantId);
+		quantitiesById[quantity.plantId] = quantity.quantity;
+	}
+
+	if(plantIds.length < 3) {
+		return res.status(400).json({
+			message: 'At least three plants with quantities must be supplied',
+			status: 400,
+		});
+	}
+
+	Plant
+	.query(function(qb) {
+		qb.where('id', '=', plantIds[0]);
+		for(var i=1; i<plantIds.length; i++) {
+			qb.orWhere('id', '=', plantIds[i]);
+		}
+	})
+	.fetchAll()
+	.then(function(plants) {
+		plants.forEach(function(plant) {
+			plant.set('quantity', quantitiesById[plant.id]);
+		});
+		algorithmFactory.build(
+			req.body.algorithm,
+			req.body.width,
+			req.body.height,
+			plants,
+			function(err, data) {
+				if(err) {
+					res.status(400).json({
+						message: 'At least three plants with quantities must be supplied',
+						status: 400,
+					});
+				}
+				else {
+					res.json(data);
+				}
+			}
+		);
+	});
+
+});
 
 module.exports = router;
