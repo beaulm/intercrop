@@ -32,6 +32,8 @@ module.exports = React.createClass({
 		this.plants.on('sync', () => {
 			this.forceUpdate();
 		});
+		this.matrixHistory = [this.generatePlantMatrix(this.state.width, this.state.height)];
+		this.undoneHistory = [];
 	},
 
 	getNeighborAffinity: function(state, plantId, x, y, xOffset, yOffset) {
@@ -175,7 +177,6 @@ module.exports = React.createClass({
 						style={style}
 						onMouseDown={this.setDragData(x, y, 'dragStart')}
 						onMouseEnter={this.setDragData(x, y, 'dragCurrent')}
-						onMouseUp={this.solidifyDrag(x, y)}
 						onClick={this.updatePlant(x, y)}
 					>
 						{innerElement}
@@ -194,6 +195,7 @@ module.exports = React.createClass({
 					<div className="toolbar">
 						<div className="left">
 							<button className={'remove' + (this.state.currentPlant ? '' : ' active')} onClick={this.setRemove}><i /> Eraser</button>
+							<button className="undo" onClick={this.undo}></button>
 						</div>
 						<span>Companion Score: {this.state.affinityScore}</span>
 						<div className="right">
@@ -216,6 +218,7 @@ module.exports = React.createClass({
 			units: units,
 			plantMatrix: this.generatePlantMatrix(width, height, this.state.plantMatrix),
 		});
+		this.updateMatrixHistory(newMatrix);
 	},
 
 	generatePlantMatrix: function(width, height, currentPlantMatrix) {
@@ -237,13 +240,6 @@ module.exports = React.createClass({
 			newMatrix.push(row);
 		}
 		return newMatrix;
-	},
-
-	boxChange: function(x, y) {
-		this.state.plantMatrix[y][x] = this.state.currentPlant;
-		this.setState({
-			plantMatrix: this.state.plantMatrix
-		});
 	},
 
 	setDragData: function(x, y, property) {
@@ -274,6 +270,7 @@ module.exports = React.createClass({
 					this.state.plantMatrix[yy][xx] = this.state.currentPlant;
 				}
 			}
+			this.updateMatrixHistory(this.state.plantMatrix);
 			this.setState({
 				dragStart: null,
 				dragCurrent: null,
@@ -284,11 +281,15 @@ module.exports = React.createClass({
 
 	updatePlant: function(x, y) {
 		return () => {
-			this.state.plantMatrix[y][x] = this.state.currentPlant;
+			let newMatrix = this.generatePlantMatrix(this.state.width, this.state.height, this.state.plantMatrix);
+			newMatrix[y][x] = this.state.currentPlant;
+			this.updateMatrixHistory(newMatrix);
 			this.setState({
 				dragStart: null,
 				dragCurrent: null,
-				plantMatrix: this.state.plantMatrix
+				plantMatrix: newMatrix
+			}, function() {
+
 			});
 		}
 	},
@@ -303,6 +304,21 @@ module.exports = React.createClass({
 		this.setState({
 			currentPlant: 0
 		});
+	},
+
+	updateMatrixHistory: function(newMatrix) {
+		this.matrixHistory.push(this.generatePlantMatrix(this.state.width, this.state.height, newMatrix));
+		this.undoneHistory = [];
+	},
+
+	undo: function() {
+		if(this.matrixHistory.length > 1) {
+			this.undoneHistory.push(this.matrixHistory.pop());
+
+			this.setState({
+				plantMatrix: this.matrixHistory[this.matrixHistory.length-1]
+			});
+		}
 	},
 
 	closeModal: function() {
