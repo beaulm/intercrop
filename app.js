@@ -13,7 +13,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var knexLogger = require('knex-logger');
-var RedisStore = require('connect-redis')(session)
+var RedisStore = require('connect-redis')(session);
 var config = require('./config');
 // var passportSetup = require('./libs/passport-setup');
 

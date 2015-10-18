@@ -6,12 +6,12 @@ module.exports = function(config) {
 	var files = fs.readdirSync(config.path);
 	var algorithms = files.map(function(file) {
 		return {
-			model: require(path.join(config.path, file)),
+			algorithm: require(path.join(config.path, file)),
 			name: file.split('.')[0].toLowerCase()
 		};
 	})
 	.reduce(function(before, info) {
-		before[info.name] = info.model;
+		before[info.name] = info.algorithm;
 		return before;
 	}, {});
 

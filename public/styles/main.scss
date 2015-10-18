@@ -35,11 +35,6 @@ input {
 	}
 }
 
-// select {
-// 	height: 27px;
-// 	height: calculateRem(28px);
-// }
-
 nav {
 	height: $navHeight;
 	height: calculateRem($navHeight);
