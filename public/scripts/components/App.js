@@ -3,7 +3,8 @@ let PlantCollection = require('../collections/PlantCollection');
 let _ = require('backbone/node_modules/underscore');
 let PlantPicker = require('./PlantPicker');
 let ResizeButton = require('./ResizeButton');
-let Backbone = require('backbone');
+let WelcomeModal = require('./WelcomeModal');
+let $ = require('jquery');
 
 const boxLength = 30;
 
@@ -21,6 +22,7 @@ module.exports = React.createClass({
 			plantMatrix: this.generatePlantMatrix(width, height),
 			affinityScore: 0,
 			currentPlant: 1,
+			showModal: true,
 		};
 	},
 
@@ -30,11 +32,8 @@ module.exports = React.createClass({
 		this.plants.on('sync', () => {
 			this.forceUpdate();
 		});
-		this.dispatcher = _.extend({}, Backbone.Events);
-		this.dispatcher.on('currentPlantChanged', this.setCurrentPlant);
 		this.matrixHistory = [this.generatePlantMatrix(this.state.width, this.state.height)];
 		this.undoneHistory = [];
-		// this.historyPosition = 0;
 	},
 
 	getNeighborAffinity: function(state, plantId, x, y, xOffset, yOffset) {
@@ -191,11 +190,11 @@ module.exports = React.createClass({
 
 		return (
 			<main onMouseUp={this.solidifyDrag()}>
-				<PlantPicker plants={this.plants} dispatcher={this.dispatcher} />
+				<PlantPicker plants={this.plants} currentPlant={this.state.currentPlant} onChange={this.setCurrentPlant} />
 				<section className="editor">
 					<div className="toolbar">
 						<div className="left">
-							<button className={'remove' + (this.state.currentPlant ? '' : ' active')}onClick={this.setRemove}><i /> Eraser</button>
+							<button className={'remove' + (this.state.currentPlant ? '' : ' active')} onClick={this.setRemove}><i /> Eraser</button>
 							<button className="undo" onClick={this.undo}></button>
 						</div>
 						<span>Companion Score: {this.state.affinityScore}</span>
@@ -207,6 +206,7 @@ module.exports = React.createClass({
 						{boxElements}
 					</div>
 				</section>
+				<WelcomeModal isOpen={this.state.showModal} onClose={this.closeModal} onFinish={this.generateLayout} plants={this.plants.clone()} />
 			</main>
 		);
 	},
@@ -294,14 +294,16 @@ module.exports = React.createClass({
 		}
 	},
 
-	setCurrentPlant: function(plantId) {
+	setCurrentPlant: function(plant) {
 		this.setState({
-			currentPlant: plantId
+			currentPlant: plant.id
 		});
 	},
 
 	setRemove: function(e) {
-		this.dispatcher.trigger('currentPlantChanged', 0);
+		this.setState({
+			currentPlant: 0
+		});
 	},
 
 	updateMatrixHistory: function(newMatrix) {
@@ -318,4 +320,53 @@ module.exports = React.createClass({
 			});
 		}
 	},
+
+	closeModal: function() {
+		this.setState({ showModal: false });
+	},
+
+	generateLayout: function(size, pickedPlants) {
+		let width = null;
+		let height = null;
+		if(size.units === 'imperial') {
+			width = (2.54*12*parseInt(size.width.feet) + 2.54*parseInt(size.width.inches))/100;
+			height = (2.54*12*parseInt(size.height.feet) + 2.54*parseInt(size.height.inches))/100;
+		}
+		else if(size.units === 'metric') {
+			width = parseFloat(size.width.meters);
+			height = parseFloat(size.height.meters);
+		}
+
+		let quantities = pickedPlants.map(function(plant) {
+			return {
+				plantId: plant.id,
+				quantity: plant.get('quantity') || 0
+			};
+		});
+
+		$.ajax({
+			type: 'POST',
+			url: '/api/v1/generate-layout',
+			dataType: 'json',
+			contentType: 'application/json',
+			async: true,
+			data: JSON.stringify({
+				width: width,
+				height: height,
+				quantities: quantities,
+				algorithm: 'test'
+			}),
+			success: (result) => {
+				this.setState({
+					width: result.width,
+					height: result.height,
+					plantMatrix: result.matrix
+				});
+				this.closeModal();
+			},
+			error: (err) => {
+				console.log(err);
+			}
+		});
+	}
 });
