@@ -1,0 +1,33 @@
+.pick-quantity-row {
+	overflow: hidden;
+	padding: 0.5em 0;
+
+	img {
+		display: block;
+		float: left;
+		width: 2.125em;
+	}
+
+	.no-image {
+		float: left;
+	}
+
+	.plant-name {
+		float: left;
+		width: 12em;
+		margin-left: 1em;
+		line-height: 2.125em;
+	}
+
+	input {
+		float: left;
+	}
+
+	.unit {
+		float: left;
+		margin-left: 0.3em;
+		line-height: 2.125em;
+		color: #999;
+		font-size: 0.875em;
+	}
+}

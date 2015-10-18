@@ -1,0 +1,63 @@
+.modal-spacer {
+	padding: 5em;
+	position: absolute;
+	z-index: 11;
+	width: 100%;
+	max-width: 50em;
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
+	top: 0;
+	box-sizing: border-box;
+}
+
+.modal {
+	
+	background-color: #fff;
+	box-sizing: border-box;
+	background: #fff;
+	top: 6em;
+
+	header {
+		padding: 1em;
+		background: #ccc;
+		overflow: hidden;
+
+		.title {
+			float: left;
+		}
+
+		.close {
+			display: block;
+			float: right;
+			background: none;
+			border: 0;
+			cursor: pointer;
+		}
+	}
+
+	section {
+		top: 0;
+		padding: 1em;
+		box-sizing: border-box;
+		text-align: left;
+		z-index: 12;
+	}
+
+	footer {
+		padding: 1em;
+		background: #ccc;
+		overflow: hidden;
+	}
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	min-height: 100%;
+	width: 100%;
+	z-index: 10;
+	background-color: rgba(0, 0, 0, 0.5);
+}

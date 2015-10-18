@@ -1,6 +1,9 @@
 @import 'utils';
 @import 'vars';
 @import 'resize-button';
+@import 'custom-modal';
+@import 'form';
+@import 'pick-quantity-row';
 @import '../../node_modules/ionicons/scss/ionicons-variables';
 @import '../../node_modules/ionicons/scss/ionicons-font';
 
@@ -18,7 +21,7 @@ h6 {
 	color: #333;
 }
 
-input, select {
+input {
 	display: block;
 	margin: 0;
 	border: 1px solid $borderColor;
@@ -30,11 +33,6 @@ input, select {
 	&:focus {
 		border-color: darken($borderColor, 10%);
 	}
-}
-
-select {
-	height: 27px;
-	height: calculateRem(28px);
 }
 
 nav {
@@ -50,7 +48,7 @@ nav {
 	z-index: 1;
 }
 
-.btn-default {
+.btn {
 	border: 1px solid #e4e5e7;
 	background-color: #fff;
 	color: #6a6c6f;
@@ -64,6 +62,21 @@ nav {
 		background-color: #fff;
 		border-color: #d9dbdd;
 		color: #606265;
+	}
+}
+
+.lg {
+	font-size: 1.2em;
+}
+
+.primary {
+	background: $primaryButtonColor;
+	color: #fff;
+	transition: background-color 0.2s;
+
+	&:hover {
+		color: #fff;
+		background: darken($primaryButtonColor, 10%);
 	}
 }
 
@@ -94,6 +107,9 @@ nav {
 
 	.form-row {
 		position: relative;
+		width: 100%;
+		margin: 0;
+		padding: 0;
 	}
 
 	.search {
@@ -201,6 +217,9 @@ nav {
 	-ms-user-select: none;
 	user-select: none;
 	text-transform: capitalize;
+	width: 2.125em;
+	height: 2.125em;
+	line-height: 2.125em;
 }
 
 .editor {
@@ -221,7 +240,7 @@ nav {
 	margin-bottom: 1em;
 	
 	button {
-		@extend .btn-default;
+		@extend .btn;
 		font-size: 14px;
 
 		i {
