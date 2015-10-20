@@ -354,7 +354,7 @@ module.exports = React.createClass({
 				width: width,
 				height: height,
 				quantities: quantities,
-				algorithm: 'test'
+				algorithm: 'quicksort'
 			}),
 			success: (result) => {
 				this.setState({
