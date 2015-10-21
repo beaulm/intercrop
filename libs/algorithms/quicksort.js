@@ -78,12 +78,24 @@ module.exports = function(widthInMeters, heightInMeters, plants, cb) {
 	//Add a plant to the return matrix
 	function placePlantInGarden(plant, startingRow, startingColumn, columnsWide, rowsHigh) {
 
+		//Keep track of how much of this plant we've added
+		var addedSoFar = 0;
+
 		//Go through all the cells in the specified block
 		for(var rowNumber=startingRow; rowNumber<startingRow+rowsHigh; rowNumber++) {
 			for(var cellNumber=startingColumn; cellNumber<startingColumn+columnsWide; cellNumber++) {
 
 				//Set that cell value equal to the id of the plant to place there
 				result[rowNumber][cellNumber] = plant.get('id');
+
+				//Note that we added one more of this plant
+				addedSoFar++;
+
+				//If we've added as much of this plant as necessary
+				if(addedSoFar >= plant.get('quantity')) {
+					//Stop adding it
+					return;
+				}
 			}
 		}
 	}
@@ -152,6 +164,24 @@ module.exports = function(widthInMeters, heightInMeters, plants, cb) {
 							}
 						}
 					}
+
+					//Otherwise, try to make a nice square with a little extra
+					var colsToSpan = Math.floor(Math.sqrt(plant.get('quantity')));
+					var rowsToSpan = Math.ceil(plant.get('quantity')/colsToSpan);
+					if(plantCanFit(currentRow, startOfEmptySpace, colsToSpan, rowsToSpan)) {
+
+						//Put it there
+						placePlantInGarden(plant, currentRow, startOfEmptySpace, colsToSpan, rowsToSpan);
+						return;
+					}
+
+					//Otherwise, see if the plant can fit in a box here that's bigger than necessary, meaning it won't make a perfect rectangle
+					if(plantCanFit(currentRow, startOfEmptySpace, colsToSpan, Math.ceil(plant.get('quantity')/spaceLeftInThisRow))) {
+
+						//Put it there
+						placePlantInGarden(plant, currentRow, startOfEmptySpace, spaceLeftInThisRow, Math.ceil(plant.get('quantity')/spaceLeftInThisRow));
+						return;
+					}
 				}
 
 				//TODO: Otherwise, rotate the matrix to the right by 90 degrees and try again
@@ -160,7 +190,7 @@ module.exports = function(widthInMeters, heightInMeters, plants, cb) {
 
 		//TODO: If we just rotated the matrix to the right and still couldn't place it nicely
 			//TODO: Rotate the matix to the left (returning it to its original orientation)
-			
+
 			//Go through each cell in the matrix and start placing the plant wherever is available
 			for(var rowNumber=0; rowNumber<numRows; rowNumber++) {
 				for(var cellNumber=0; cellNumber<numCols; cellNumber++) {
