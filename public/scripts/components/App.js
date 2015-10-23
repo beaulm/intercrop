@@ -196,6 +196,7 @@ module.exports = React.createClass({
 						<div className="left">
 							<button className={'remove' + (this.state.currentPlant ? '' : ' active')} onClick={this.setRemove}><i /> Eraser</button>
 							<button className="undo" onClick={this.undo}></button>
+							<button className="redo" onClick={this.redo}></button>
 						</div>
 						<span>Companion Score: {this.state.affinityScore}</span>
 						<div className="right">
@@ -314,6 +315,16 @@ module.exports = React.createClass({
 	undo: function() {
 		if(this.matrixHistory.length > 1) {
 			this.undoneHistory.push(this.matrixHistory.pop());
+
+			this.setState({
+				plantMatrix: this.matrixHistory[this.matrixHistory.length-1]
+			});
+		}
+	},
+
+	redo: function() {
+		if(this.undoneHistory.length > 0) {
+			this.matrixHistory.push(this.undoneHistory.pop());
 
 			this.setState({
 				plantMatrix: this.matrixHistory[this.matrixHistory.length-1]
