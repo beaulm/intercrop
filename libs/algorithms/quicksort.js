@@ -1,4 +1,5 @@
 module.exports = function(widthInMeters, heightInMeters, plants, cb) {
+	//Get a cache of the factor list for the first 400 integers
 	var factors = require('./factors');
 	var cellsPerMeter = 10;
 	var numCols = Math.floor(widthInMeters*cellsPerMeter);
@@ -149,18 +150,20 @@ module.exports = function(widthInMeters, heightInMeters, plants, cb) {
 					}
 
 					//Otherwise, find the largest factor of the amount of the current plant to be placed which is smaller than the number of cells left in the current row
-					//Start from the second to last factor (the last factor being the quantity of the plant, which we already know doesn't fit in the current row), and work back to the second to last factor, which is always 1
-					for(var factorNumber=factors[plant.get('quantity')].length-1; factorNumber>1; factorNumber--) {
+					if(typeof factors[plant.get('quantity')] !== 'undefined') {
+						//Start from the second to last factor (the last factor being the quantity of the plant, which we already know doesn't fit in the current row), and work back to the second to last factor, which is always 1
+						for(var factorNumber=factors[plant.get('quantity')].length-1; factorNumber>1; factorNumber--) {
 
-						//If the current factor is smaller than the amount of space left in the current row
-						if(factors[plant.get('quantity')][factorNumber] < spaceLeftInThisRow) {
+							//If the current factor is smaller than the amount of space left in the current row
+							if(factors[plant.get('quantity')][factorNumber] < spaceLeftInThisRow) {
 
-							//If enough rows beneath the current row are available to place all of the plant
-							if(plantCanFit(currentRow, startOfEmptySpace, factors[plant.get('quantity')][factorNumber], (plant.get('quantity')/factors[plant.get('quantity')][factorNumber]))) {
+								//If enough rows beneath the current row are available to place all of the plant
+								if(plantCanFit(currentRow, startOfEmptySpace, factors[plant.get('quantity')][factorNumber], (plant.get('quantity')/factors[plant.get('quantity')][factorNumber]))) {
 
-								//Put it there
-								placePlantInGarden(plant, currentRow, startOfEmptySpace, factors[plant.get('quantity')][factorNumber], (plant.get('quantity')/factors[plant.get('quantity')][factorNumber]));
-								return;
+									//Put it there
+									placePlantInGarden(plant, currentRow, startOfEmptySpace, factors[plant.get('quantity')][factorNumber], (plant.get('quantity')/factors[plant.get('quantity')][factorNumber]));
+									return;
+								}
 							}
 						}
 					}
