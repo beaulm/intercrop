@@ -136,6 +136,7 @@ module.exports = React.createClass({
 
 	render: function() {
 		let plotGridStyle = {
+			cursor: (this.state.currentPlant ? 'cell' : 'url("/images/ionicons/eraser.png"), auto'),
 			height: (this.state.height*boxLength)+'px',
 			width: (this.state.width*boxLength)+'px',
 		};
