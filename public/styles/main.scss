@@ -264,6 +264,12 @@ nav {
 			margin-left: .5em;
 		}
 
+		&.redo {
+			@extend .ion;
+			&:before { content: $ionicon-var-ios-redo; }
+			margin-left: .5em;
+		}
+
 		&.resize {
 			i {
 				&:before { content: $ionicon-var-arrow-resize; }
