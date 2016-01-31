@@ -52,7 +52,8 @@ module.exports = React.createClass({
 							onClose={this.props.onClose}
 							onFinish={this.finish}
 							onSwitchPage={this.switchPage}
-							plants={this.state.pickedPlants} />
+							plants={this.state.pickedPlants}
+							size={this.state.size} />
 			break;
 		}
 
