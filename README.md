@@ -18,3 +18,4 @@
 1. Run `npm install` to install dependencies
 1. Run `brew/apt-get install redis postgres` to get redis which is used for storing session data, and postgres
 1. Run `gulp` to start the server
+1. Point your browser at http://localhost:3000/ and enjoy
