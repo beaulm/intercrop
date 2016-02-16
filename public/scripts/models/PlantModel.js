@@ -6,7 +6,8 @@ module.exports = Backbone.Model.extend({
 		id: null,
 		name: '',
 		url: '',
-		affinities: {}
+		affinities: {},
+		quantity: 0,
 	},
 	urlRoot: '/api/v1/plant',
 	generateImage: function() {

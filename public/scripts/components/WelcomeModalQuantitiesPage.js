@@ -1,12 +1,22 @@
 let React = require('react');
 let PickQuantityRow = require('./PickQuantityRow');
-// let LengthConversions = require('../../libs/length-conversions');
+let LengthConversions = require('../../../libs/length-conversions');
 
 module.exports = React.createClass({
 	getInitialState: function() {
 		return {
-			error: ''
+			error: '',
+			quantityLeft: LengthConversions.sizeToBoxes(this.props.size),
 		}
+	},
+	componentWillMount: function() {
+		this.props.plants.on('change:quantity', () => {
+			let spaceUsed = this.props.plants.reduce(function(sum, plant) {
+				return sum+(plant.get('quantity') || 0);
+			}, 0);
+			let spaceLeft = LengthConversions.sizeToBoxes(this.props.size)-spaceUsed;
+			this.setState({quantityLeft: spaceLeft});
+		});
 	},
 	componentDidMount: function() {
 		this.refs.rows.querySelector('input').focus();
@@ -19,6 +29,10 @@ module.exports = React.createClass({
 		if(this.state.error) {
 			error = <div className="error">{this.state.error}</div>
 		}
+		let remainingSpaceColor = '#000';
+		if(this.state.quantityLeft <= 0) {
+			remainingSpaceColor = '#ff0000';
+		}
 		return (
 			<div>
 				<header>
@@ -28,6 +42,9 @@ module.exports = React.createClass({
 				<section ref="rows">
 					{rows}
 					{error}
+				</section>
+				<section>
+					Space left: <span style={{color: remainingSpaceColor}}>{this.state.quantityLeft}</span>
 				</section>
 				<footer>
 					<button onClick={this.finish} className="btn lg primary" key="next">Save &amp; Finish</button>
