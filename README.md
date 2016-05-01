@@ -17,7 +17,7 @@
 1. Run `npm install -g gulp knex`
 1. Run `npm install` to install dependencies
 1. Run `brew/apt-get install redis postgres` to get redis which is used for storing session data, and postgres
-1. In postgres, create a table called `intercrop`, a user for the app, and give the user permissions to the table
+1. In postgres, create a database called `intercrop`, a user for the app, and give the user permissions to the database
   1. `createdb intercrop`
   1. `su - postgres`
   1. `psql template1`
