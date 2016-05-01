@@ -54,6 +54,7 @@
     "react-dom": "^0.14.0",
     "serve-favicon": "~2.3.0",
     "the-noun-project": "^2.0.0",
+    "underscore": "^1.8.3",
     "validator": "^4.1.0"
   }
 }

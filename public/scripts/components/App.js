@@ -1,6 +1,6 @@
 let React = require('react');
 let PlantCollection = require('../collections/PlantCollection');
-let _ = require('backbone/node_modules/underscore');
+let _ = require('underscore');
 let PlantPicker = require('./PlantPicker');
 let ResizeButton = require('./ResizeButton');
 let WelcomeModal = require('./WelcomeModal');
