@@ -30,3 +30,6 @@
 1. `knex seed:run`
 1. Run `gulp` to start the server
 1. Point your browser at http://localhost:3000/ and enjoy
+
+### Linux
+If `FSWatcher` throws an error, run `echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p`

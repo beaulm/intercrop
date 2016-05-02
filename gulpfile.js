@@ -114,7 +114,7 @@ var customOpts = {
 	debug: true
 };
 var opts = assign({}, watchify.args, customOpts);
-var b = watchify(browserify(opts).transform(babelify));
+var b = watchify(browserify(opts).transform(babelify, {presets: ["react"]}));
 b.on('update', bundle); // on any dep update, runs the bundler
 b.on('log', gutil.log); // output build logs to terminal
 
