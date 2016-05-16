@@ -6,7 +6,7 @@ module.exports = React.createClass({
 	getInitialState: function() {
 		return {
 			error: '',
-			quantityLeft: LengthConversions.sizeToBoxes(this.props.size),
+			quantityLeft: Math.floor(LengthConversions.sizeToBoxes(this.props.size)),
 		}
 	},
 	componentWillMount: function() {
@@ -14,7 +14,7 @@ module.exports = React.createClass({
 			let spaceUsed = this.props.plants.reduce(function(sum, plant) {
 				return sum+(plant.get('quantity') || 0);
 			}, 0);
-			let spaceLeft = LengthConversions.sizeToBoxes(this.props.size)-spaceUsed;
+			let spaceLeft = Math.floor(LengthConversions.sizeToBoxes(this.props.size)-spaceUsed);
 			this.setState({quantityLeft: spaceLeft});
 		});
 	},

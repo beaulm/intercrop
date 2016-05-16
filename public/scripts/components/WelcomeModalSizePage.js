@@ -142,8 +142,8 @@ module.exports = React.createClass({
 				this.setState({ error: 'The number of feet under height must be a whole number.'});
 			}
 			else {
-				width = 2.54*12*parseInt(this.refs.widthFeet.value) + 2.54*parseInt(this.refs.widthInches.value);
-				height = 2.54*12*parseInt(this.refs.heightFeet.value) + 2.54*parseInt(this.refs.heightInches.value);
+				width = (2.54*12*parseInt(this.refs.widthFeet.value) + 2.54*parseInt(this.refs.widthInches.value))/100;
+				height = (2.54*12*parseInt(this.refs.heightFeet.value) + 2.54*parseInt(this.refs.heightInches.value))/100;
 			}
 		}
 		else if(this.props.size.units === 'metric') {
@@ -166,6 +166,8 @@ module.exports = React.createClass({
 		}
 
 		if(width !== null && height !== null) {
+			this.props.size.width.meters = width;
+			this.props.size.height.meters = height;
 			this.props.onSwitchPage('pick-plants')();
 		}
 	},
